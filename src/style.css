@@ -5,21 +5,21 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #fef0cc;
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: #d99e37;
     color: white;
     text-align: center;
-    padding: 1em 0;
+    padding: 0.2em 0;
 }
 
 footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 0.5em 0;
+    padding: 0.1em 0;
     margin-top: auto;
 }
 
@@ -38,4 +38,43 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+.cardPlacement
+{
+    height: 18rem;
+    width: 12rem;
+    background-color: #d3d3d364;
+    text-align: center;
+    border-radius: 1rem;
+    border: 0.1rem solid;
+    border-color: #69696981;
+}
+
+.card {
+    height: 18rem;
+    width: 12rem;
+    background-color: #ffd697;
+    text-align: center;
+    border-radius: 1rem;
+    border: 0.2rem solid;
+    border-color: #b3976a;
+    padding: 0.2rem;
+
+    user-select: none;
+    position: absolute;
+    cursor: grab;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img{
+        height: 13rem;
+        width: 9rem;
+        border-radius: 0.5rem;
+        user-select: none;
+        
+    }
 }
