@@ -6,6 +6,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #fef0cc;
+    overflow: hidden;
 }
 
 header {
@@ -26,6 +27,9 @@ footer {
 main {
     flex: 1;
     padding: 20px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 button {
@@ -40,6 +44,33 @@ button:hover {
     background-color: #45a049;
 }
 
+.playArea
+{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 10rem;
+}
+
+.board
+{
+    padding: 2rem;
+    background-color: #4b4b4b;
+    text-align: center;
+    border-radius: 1rem;
+    border: 0.1rem solid;
+    border-color: #282828;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
 .cardPlacement
 {
     height: 18rem;
@@ -49,6 +80,74 @@ button:hover {
     border-radius: 1rem;
     border: 0.1rem solid;
     border-color: #69696981;
+    margin: 0.6rem;
+}
+
+.placementDirectionText
+{
+    font-size: 1.6rem;
+    color: #fff9ea;
+    margin: 1rem;
+}
+
+.checkButtonPanel
+{
+    height: 7rem;
+    width: 14rem;
+    background-color: #4b4b4b;
+    text-align: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    border: 0.1rem solid;
+    border-top: 0;
+    border-color: #282828;
+}
+
+.checkButton
+{
+    margin-top: 0.4rem;
+    height: 80%;
+    width: 80%;
+    border-radius: 0.6rem;
+
+    font-size: 1.6rem;
+    color: #fff9ea;
+}
+
+.cardSpawnBoard
+{
+    min-height: 20rem;
+    min-width: 70rem;
+    padding: 2rem;
+    background-color: #565656;
+    text-align: center;
+    border-radius: 1rem;
+    border: 0.1rem solid;
+    border-color: #585858;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+
+    margin-top: 4rem;
+}
+
+.cardSpawn
+{
+    height: 18rem;
+    width: 12rem;
+
+    border-radius: 1rem;
+    border: 0.2rem dashed;
+    border-color: #353535;
+    padding: 0.2rem;
+
+    user-select: none;
+    cursor: grab;
+
+    margin: 0.4rem;
 }
 
 .card {
@@ -62,9 +161,9 @@ button:hover {
     padding: 0.2rem;
 
     user-select: none;
-    position: absolute;
     cursor: grab;
 
+    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
