@@ -1,31 +1,4 @@
-"use strict";
-let filmDetails = [
-    {
-        title: "Shrek",
-        posterSrc: "https://m.media-amazon.com/images/M/MV5BN2FkMTRkNTUtYTI0NC00ZjI4LWI5MzUtMDFmOGY0NmU2OGY1XkEyXkFqcGc@._V1_.jpg",
-        rating: 7.9,
-    },
-    {
-        title: "Twilight",
-        posterSrc: "https://m.media-amazon.com/images/M/MV5BMTQ2NzUxMTAxN15BMl5BanBnXkFtZTcwMzEyMTIwMg@@._V1_.jpg",
-        rating: 5.3,
-    },
-    {
-        title: "Superbad",
-        posterSrc: "https://m.media-amazon.com/images/M/MV5BNjk0MzdlZGEtNTRkOC00ZDRiLWJkYjAtMzUzYTRiNzk1YTViXkEyXkFqcGc@._V1_.jpg",
-        rating: 7.6,
-    },
-    {
-        title: "Perfect Blue",
-        posterSrc: "https://m.media-amazon.com/images/M/MV5BMzAwNDIzMzEtZDZkNC00ZDQ4LTk3ZDMtZjVhMTU2YzgzZTZiXkEyXkFqcGc@._V1_.jpg",
-        rating: 8.0,
-    },
-    {
-        title: "A Minecraft Movie",
-        posterSrc: "https://m.media-amazon.com/images/M/MV5BYzFjMzNjOTktNDBlNy00YWZhLWExYTctZDcxNDA4OWVhOTJjXkEyXkFqcGc@._V1_.jpg",
-        rating: 6.0,
-    },
-];
+import { filmCollections } from './database.js';
 class Card {
     constructor(element, spawn, id) {
         this.correctlyPlaced = false;
@@ -45,7 +18,8 @@ class Placement {
         this.element = element;
     }
 }
-let flimCount = filmDetails.length;
+let flimCount = 0;
+let filmDetails;
 let cards = [];
 let placements = [];
 let answer = new Map();
@@ -55,6 +29,9 @@ let attemptCounterText = null;
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
 function initGame() {
+    const random = Math.floor(Math.random() * filmCollections.length);
+    filmDetails = filmCollections[random];
+    flimCount = filmDetails.length;
     initAnswer();
     InitBoard();
 }

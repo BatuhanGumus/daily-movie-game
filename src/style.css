@@ -192,4 +192,5 @@ button:hover {
 .correctPlacement
 {
     background-color: #9aff2d;
+    cursor: pointer;
 }
