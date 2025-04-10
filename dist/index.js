@@ -24,7 +24,7 @@ let filmDetails = [
         title: "A Minecraft Movie",
         posterSrc: "https://m.media-amazon.com/images/M/MV5BYzFjMzNjOTktNDBlNy00YWZhLWExYTctZDcxNDA4OWVhOTJjXkEyXkFqcGc@._V1_.jpg",
         rating: 6.0,
-    }
+    },
 ];
 class Card {
     constructor(element, spawn, id) {
@@ -138,6 +138,7 @@ function InitCard(cardDiv, card, filmInfo) {
         card.offsetX = e.clientX - cardDiv.offsetLeft;
         card.offsetY = e.clientY - cardDiv.offsetTop;
         cardDiv.style.cursor = "grabbing";
+        cardDiv.style.zIndex = "1000";
     });
     document.addEventListener("mousemove", (e) => {
         if (card.isDragging) {
@@ -150,6 +151,7 @@ function InitCard(cardDiv, card, filmInfo) {
             return;
         card.isDragging = false;
         cardDiv.style.cursor = "grab";
+        cardDiv.style.zIndex = "1";
         let isPlaced = false;
         const cardRect = cardDiv.getBoundingClientRect();
         for (let placement of placements) {

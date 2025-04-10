@@ -23,7 +23,7 @@ let filmDetails = [
     title: "A Minecraft Movie",
     posterSrc: "https://m.media-amazon.com/images/M/MV5BYzFjMzNjOTktNDBlNy00YWZhLWExYTctZDcxNDA4OWVhOTJjXkEyXkFqcGc@._V1_.jpg",
     rating: 6.0,
-  }
+  },
 ];
 
 class Card
@@ -181,6 +181,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
     card.offsetX = e.clientX - cardDiv.offsetLeft;
     card.offsetY = e.clientY - cardDiv.offsetTop;
     cardDiv.style.cursor = "grabbing";
+    cardDiv.style.zIndex = "1000";
   });
   
   document.addEventListener("mousemove", (e: MouseEvent) => {
@@ -195,6 +196,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
 
     card.isDragging = false;
     cardDiv.style.cursor = "grab";
+    cardDiv.style.zIndex = "1";
 
     let isPlaced = false;
     
