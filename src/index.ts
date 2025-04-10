@@ -151,7 +151,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardDiv.appendChild(cardText);
   cardDiv.classList.add('card');
 
-  cardDiv.addEventListener("mousedown", (e: MouseEvent) => 
+  cardDiv.addEventListener("pointerdown", (e: MouseEvent) => 
   {
     if(card.correctlyPlaced) return;
 
@@ -162,14 +162,14 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
     cardDiv.style.zIndex = "1000";
   });
   
-  document.addEventListener("mousemove", (e: MouseEvent) => {
+  document.addEventListener("pointermove", (e: MouseEvent) => {
     if (card.isDragging) {
       cardDiv.style.left = `${e.clientX - card.offsetX}px`;
       cardDiv.style.top = `${e.clientY - card.offsetY}px`;
     }
   });
   
-  document.addEventListener("mouseup", () => {
+  document.addEventListener("pointerup", () => {
     if (!card.isDragging) return;
 
     card.isDragging = false;
