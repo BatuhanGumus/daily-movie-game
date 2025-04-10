@@ -28,48 +28,66 @@ let filmDetails = [
 
 class Card
 {
+  correctlyPlaced = false;
   isDragging = false;
   offsetX = 0;
   offsetY = 0;
-  element : HTMLElement | null = null;
-  spawn : HTMLElement | null = null;
-  placedOn : HTMLElement | null = null;
-  rating = -1;
+  element : HTMLElement;
+  spawn : HTMLElement;
+  placedOn : Placement | null = null;
+  id = 0;
+
+  constructor(element :HTMLElement, spawn :HTMLElement, id :number) 
+  {
+    this.element = element;
+    this.spawn = spawn;
+    this.id = id;
+  }
 }
 
-let cards = [] as Card[];
-let placements = [] as HTMLElement[];
-
-
-document.addEventListener('DOMContentLoaded', () => {
-
-  InitBoard();
-});
-
-window.addEventListener("resize", function(event)
+class Placement
 {
-  for(let card of cards)
-  {
-    if(card.placedOn != null)
-    {
-      const rect = card.placedOn.getBoundingClientRect();
-      if(card.element != null)
-      {
-        card.element.style.top = rect.top + "px";
-        card.element.style.left = rect.left + "px";
-      }
-    }
-    else if(card.spawn != null)
-    {
-      const rect = card.spawn.getBoundingClientRect();
-      if(card.element != null)
-      {
-        card.element.style.top = rect.top + "px";
-        card.element.style.left = rect.left + "px";
-      }
-    }
+  card : Card | null = null;
+  element : HTMLElement;
+
+  constructor(element :HTMLElement) {
+    this.element = element;
   }
-});
+}
+
+
+let flimCount = filmDetails.length;
+let cards = [] as Card[];
+let placements = [] as Placement[];
+
+let answer = new Map<number, number>();
+let attemptCount = 0;
+let maxAttempts = 3;
+let attemptCounterText = null as HTMLElement | null;
+
+document.addEventListener('DOMContentLoaded', initGame);
+window.addEventListener("resize", moveCardsToWindowResize);
+
+
+function initGame()
+{
+  initAnswer();
+  InitBoard();
+}
+
+function initAnswer()
+{
+  let i = 0;
+  let pullData = new Map<number, number>();
+  for(let film of filmDetails)
+  {
+    pullData.set(i, film.rating);
+    i++
+  }
+  answer = new Map(
+    [...pullData.entries()].sort((a, b) => a[1] - b[1])
+  );
+}
 
 function InitBoard(){
 
@@ -86,12 +104,15 @@ function InitBoard(){
   lowestRatedText.classList.add("placementDirectionText");
   board.appendChild(lowestRatedText);
 
-  filmDetails.forEach(film =>{
+  for(let i = 0; i < flimCount; i++)
+  {
     const cardPlacement = document.createElement("div")
     cardPlacement.classList.add('cardPlacement');
     board.appendChild(cardPlacement);
-    placements.push(cardPlacement);
-  });
+
+    const placemnt = new Placement(cardPlacement);
+    placements.push(placemnt);
+  }
 
   const highestRated = document.createElement("div");
   highestRated.innerText = "Highest Rated"
@@ -106,40 +127,37 @@ function InitBoard(){
   checkButton.innerText = "Check";
   checkButton.classList.add("checkButton");
   checkButtonPanel.appendChild(checkButton);
-  checkButton.addEventListener("click", () => {
-    checkCards();
-  });
+  checkButton.addEventListener("click", checkCards);
+
+  attemptCounterText = document.createElement("H2");
+  attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+  attemptCounterText.classList.add("attemptCounter");
+  checkButtonPanel.appendChild(attemptCounterText);
 
   const cardSpawnBoard = document.createElement("div");
   cardSpawnBoard.classList.add("cardSpawnBoard");
   mainContent.appendChild(cardSpawnBoard);
 
   let cardSpawns = [] as HTMLElement[];
-  filmDetails.forEach(film =>{
+  for(let i = 0; i < flimCount; i++)
+  {
     const cardSpawn = document.createElement("div")
     cardSpawn.classList.add('cardSpawn');
     cardSpawnBoard.appendChild(cardSpawn);
     cardSpawns.push(cardSpawn);
-  });
+  }
 
-  let i = 0;
-  filmDetails.forEach(film => 
-    {
-    let card = new Card();
-    cards.push(card);
+  for(let i = 0; i < flimCount; i++)
+  {
+      const cardDiv = document.createElement("div")
+      let card = new Card(cardDiv, cardSpawns[i], i);
+      InitCard(cardDiv, card, filmDetails[i]);
+      mainContent.appendChild(cardDiv);
+      cards.push(card);
 
-    const cardDiv = document.createElement("div")
-    InitCard(cardDiv, card, film);
-    card.element = cardDiv;
-    mainContent.appendChild(cardDiv);
-
-    card.spawn = cardSpawns[i];
-    const rect = card.spawn.getBoundingClientRect();
-    cardDiv.style.top = rect.top + "px";
-    cardDiv.style.left = rect.left + "px";
-
-    i++;
-  });
+      const rect = card.spawn.getBoundingClientRect();
+      setPosition(cardDiv, rect);
+  }
 }
 
 
@@ -153,9 +171,12 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardText.setAttribute('draggable', "false");
   cardDiv.appendChild(cardimg);
   cardDiv.appendChild(cardText);
-  card.rating = filmInfo.rating;
+  cardDiv.classList.add('card');
 
-  cardDiv.addEventListener("mousedown", (e: MouseEvent) => {
+  cardDiv.addEventListener("mousedown", (e: MouseEvent) => 
+  {
+    if(card.correctlyPlaced) return;
+
     card.isDragging = true;
     card.offsetX = e.clientX - cardDiv.offsetLeft;
     card.offsetY = e.clientY - cardDiv.offsetTop;
@@ -170,13 +191,16 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   });
   
   document.addEventListener("mouseup", () => {
+    if (!card.isDragging) return;
+
     card.isDragging = false;
     cardDiv.style.cursor = "grab";
 
     let isPlaced = false;
-    placements.forEach((placement) => {
-      const rect = placement.getBoundingClientRect();
-      const cardRect = cardDiv.getBoundingClientRect();
+    
+    const cardRect = cardDiv.getBoundingClientRect();
+    for(let placement of placements) {
+      const rect = placement.element.getBoundingClientRect();
       const distance = sqrDistance(
         rect.left + rect.width / 2,
         rect.top + rect.height / 2,
@@ -184,23 +208,55 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
         cardRect.top + cardRect.height / 2
       );
 
-      if (distance < 3000) {
-        cardDiv.style.top = rect.top + "px";
-        cardDiv.style.left = rect.left + "px";
-        isPlaced = true;
-        card.placedOn = placement;
-      }
-    });
+      if (distance < 4000) {
+        if(placement.card == null)
+          {
+          setPosition(cardDiv, rect);
+          if(card.placedOn != null) card.placedOn.card = null;
+          card.placedOn = placement;
+          placement.card = card;
+        }
+        else
+        {
+          if(card.placedOn != null) 
+          {
+            let placedCard = placement.card;
+            placedCard.placedOn = card.placedOn;
+            if(placedCard.placedOn != null) 
+            {
+              setPosition(placedCard.element, placedCard.placedOn.element.getBoundingClientRect());
+              placedCard.placedOn.card = placedCard;
+            }
+              
+            card.placedOn = placement;
+            setPosition(cardDiv, placement.element.getBoundingClientRect());
+            placement.card = card;
+          }
+          else
+          {
+            placement.card.placedOn = null;
+            setPosition(placement.card.element, placement.card.spawn.getBoundingClientRect());
 
-    if (!isPlaced && card.spawn != null) {
+            setPosition(cardDiv, rect);
+            card.placedOn = placement;
+            placement.card = card;
+          }
+          
+        }
+
+        isPlaced = true;
+        break;
+      }
+    }
+
+    if (!isPlaced) {
       const rect = card.spawn.getBoundingClientRect();
-      cardDiv.style.top = rect.top + "px";
-      cardDiv.style.left = rect.left + "px";
+      setPosition(cardDiv, rect);
+
+      if(card.placedOn != null) card.placedOn.card = null;
       card.placedOn = null;
     }
   });
-
-  cardDiv.classList.add('card');
 
   return cardDiv;
 }
@@ -211,21 +267,110 @@ function sqrDistance(x1: number, y1: number, x2: number, y2: number): number {
   return dx * dx + dy * dy;
 }
 
+function setPosition(element :HTMLElement, rect :DOMRect)
+{
+  element.style.top = rect.top + "px";
+  element.style.left = rect.left + "px";
+}
+
+function moveCardsToWindowResize()
+{
+  for(let card of cards)
+    {
+      if(card.placedOn != null)
+      {
+        const rect = card.placedOn.element.getBoundingClientRect();
+        setPosition(card.element, rect);
+      }
+      else
+      {
+        const rect = card.spawn.getBoundingClientRect();
+        setPosition(card.element, rect);
+      }
+    }
+}
+
 function checkCards()
 {
-  let allPlaces = true
+  if(attemptCount >= maxAttempts)
+  {
+    alert("Maximum attempts reached!");
+    return;
+  }
+
   for(let a of cards)
   {
-    if(a.placedOn === null)
+    if(a.placedOn == null)
     {
-      allPlaces = false;
-      break;
+      alert("Please place all cards before checking!");
+      return;
     }
   }
 
-  if(!allPlaces)
+  let i = 0;
+  let allCorrect = true;
+  for(let a of answer.keys())
   {
-    alert("Please place all cards before checking!");
+    if(placements[i].card?.id == a)
+    {
+      let correctCard = placements[i].card;
+      if(correctCard != null)
+      {
+        correctCard.element.classList.add("correctPlacement");
+        correctCard.correctlyPlaced = true;
+      }
+    }
+    else
+      allCorrect = false;
+
+    i++;
+  }
+
+  attemptCount++;
+  if(attemptCounterText != null) 
+    attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+
+  if(allCorrect)
+  {
+    showToast("You WIN!");
     return;
   }
+  
+
+  if(attemptCount >= maxAttempts)
+  {
+    showToast("Maximum attempts reached!, You LOSE!");
+    return;
+  }
+}
+
+function showToast(message: string, duration = 3000) {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.style.position = "fixed";
+  toast.style.bottom = "40px";
+  toast.style.right = "40px";
+  toast.style.padding = "30px 40px";
+  toast.style.backgroundColor = "#222";
+  toast.style.color = "#fff";
+  toast.style.fontSize = "1.5rem";
+  toast.style.fontWeight = "bold";
+  toast.style.borderRadius = "16px";
+  toast.style.boxShadow = "0 8px 20px rgba(0,0,0,0.4)";
+  toast.style.zIndex = "9999";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.5s ease, transform 0.3s ease";
+  toast.style.transform = "translateY(20px)";
+
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(20px)";
+    setTimeout(() => toast.remove(), 500);
+  }, duration);
 }

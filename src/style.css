@@ -93,7 +93,7 @@ button:hover {
 .checkButtonPanel
 {
     height: 7rem;
-    width: 14rem;
+    width: 22rem;
     background-color: #4b4b4b;
     text-align: center;
     border-bottom-left-radius: 1rem;
@@ -101,17 +101,28 @@ button:hover {
     border: 0.1rem solid;
     border-top: 0;
     border-color: #282828;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .checkButton
 {
-    margin-top: 0.4rem;
-    height: 80%;
-    width: 80%;
+    height: 5rem;
+    width: 12rem;
     border-radius: 0.6rem;
 
     font-size: 1.6rem;
     color: #fff9ea;
+}
+
+.attemptCounter
+{
+    font-size: 3rem;
+    color: #fff9ea;
+    margin-left: 2rem;
 }
 
 .cardSpawnBoard
@@ -176,4 +187,9 @@ button:hover {
         user-select: none;
         
     }
+}
+
+.correctPlacement
+{
+    background-color: #9aff2d;
 }

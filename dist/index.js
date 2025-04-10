@@ -27,39 +27,46 @@ let filmDetails = [
     }
 ];
 class Card {
-    constructor() {
+    constructor(element, spawn, id) {
+        this.correctlyPlaced = false;
         this.isDragging = false;
         this.offsetX = 0;
         this.offsetY = 0;
-        this.element = null;
-        this.spawn = null;
         this.placedOn = null;
-        this.rating = -1;
+        this.id = 0;
+        this.element = element;
+        this.spawn = spawn;
+        this.id = id;
     }
 }
+class Placement {
+    constructor(element) {
+        this.card = null;
+        this.element = element;
+    }
+}
+let flimCount = filmDetails.length;
 let cards = [];
 let placements = [];
-document.addEventListener('DOMContentLoaded', () => {
+let answer = new Map();
+let attemptCount = 0;
+let maxAttempts = 3;
+let attemptCounterText = null;
+document.addEventListener('DOMContentLoaded', initGame);
+window.addEventListener("resize", moveCardsToWindowResize);
+function initGame() {
+    initAnswer();
     InitBoard();
-});
-window.addEventListener("resize", function (event) {
-    for (let card of cards) {
-        if (card.placedOn != null) {
-            const rect = card.placedOn.getBoundingClientRect();
-            if (card.element != null) {
-                card.element.style.top = rect.top + "px";
-                card.element.style.left = rect.left + "px";
-            }
-        }
-        else if (card.spawn != null) {
-            const rect = card.spawn.getBoundingClientRect();
-            if (card.element != null) {
-                card.element.style.top = rect.top + "px";
-                card.element.style.left = rect.left + "px";
-            }
-        }
+}
+function initAnswer() {
+    let i = 0;
+    let pullData = new Map();
+    for (let film of filmDetails) {
+        pullData.set(i, film.rating);
+        i++;
     }
-});
+    answer = new Map([...pullData.entries()].sort((a, b) => a[1] - b[1]));
+}
 function InitBoard() {
     const mainContent = document.getElementById('main-content');
     mainContent.setAttribute('draggable', "false");
@@ -71,12 +78,13 @@ function InitBoard() {
     lowestRatedText.innerText = "Lowest Rated";
     lowestRatedText.classList.add("placementDirectionText");
     board.appendChild(lowestRatedText);
-    filmDetails.forEach(film => {
+    for (let i = 0; i < flimCount; i++) {
         const cardPlacement = document.createElement("div");
         cardPlacement.classList.add('cardPlacement');
         board.appendChild(cardPlacement);
-        placements.push(cardPlacement);
-    });
+        const placemnt = new Placement(cardPlacement);
+        placements.push(placemnt);
+    }
     const highestRated = document.createElement("div");
     highestRated.innerText = "Highest Rated";
     highestRated.classList.add("placementDirectionText");
@@ -88,33 +96,30 @@ function InitBoard() {
     checkButton.innerText = "Check";
     checkButton.classList.add("checkButton");
     checkButtonPanel.appendChild(checkButton);
-    checkButton.addEventListener("click", () => {
-        checkCards();
-    });
+    checkButton.addEventListener("click", checkCards);
+    attemptCounterText = document.createElement("H2");
+    attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+    attemptCounterText.classList.add("attemptCounter");
+    checkButtonPanel.appendChild(attemptCounterText);
     const cardSpawnBoard = document.createElement("div");
     cardSpawnBoard.classList.add("cardSpawnBoard");
     mainContent.appendChild(cardSpawnBoard);
     let cardSpawns = [];
-    filmDetails.forEach(film => {
+    for (let i = 0; i < flimCount; i++) {
         const cardSpawn = document.createElement("div");
         cardSpawn.classList.add('cardSpawn');
         cardSpawnBoard.appendChild(cardSpawn);
         cardSpawns.push(cardSpawn);
-    });
-    let i = 0;
-    filmDetails.forEach(film => {
-        let card = new Card();
-        cards.push(card);
+    }
+    for (let i = 0; i < flimCount; i++) {
         const cardDiv = document.createElement("div");
-        InitCard(cardDiv, card, film);
-        card.element = cardDiv;
+        let card = new Card(cardDiv, cardSpawns[i], i);
+        InitCard(cardDiv, card, filmDetails[i]);
         mainContent.appendChild(cardDiv);
-        card.spawn = cardSpawns[i];
+        cards.push(card);
         const rect = card.spawn.getBoundingClientRect();
-        cardDiv.style.top = rect.top + "px";
-        cardDiv.style.left = rect.left + "px";
-        i++;
-    });
+        setPosition(cardDiv, rect);
+    }
 }
 function InitCard(cardDiv, card, filmInfo) {
     const cardimg = document.createElement("img");
@@ -125,8 +130,10 @@ function InitCard(cardDiv, card, filmInfo) {
     cardText.setAttribute('draggable', "false");
     cardDiv.appendChild(cardimg);
     cardDiv.appendChild(cardText);
-    card.rating = filmInfo.rating;
+    cardDiv.classList.add('card');
     cardDiv.addEventListener("mousedown", (e) => {
+        if (card.correctlyPlaced)
+            return;
         card.isDragging = true;
         card.offsetX = e.clientX - cardDiv.offsetLeft;
         card.offsetY = e.clientY - cardDiv.offsetTop;
@@ -139,28 +146,55 @@ function InitCard(cardDiv, card, filmInfo) {
         }
     });
     document.addEventListener("mouseup", () => {
+        if (!card.isDragging)
+            return;
         card.isDragging = false;
         cardDiv.style.cursor = "grab";
         let isPlaced = false;
-        placements.forEach((placement) => {
-            const rect = placement.getBoundingClientRect();
-            const cardRect = cardDiv.getBoundingClientRect();
+        const cardRect = cardDiv.getBoundingClientRect();
+        for (let placement of placements) {
+            const rect = placement.element.getBoundingClientRect();
             const distance = sqrDistance(rect.left + rect.width / 2, rect.top + rect.height / 2, cardRect.left + cardRect.width / 2, cardRect.top + cardRect.height / 2);
-            if (distance < 3000) {
-                cardDiv.style.top = rect.top + "px";
-                cardDiv.style.left = rect.left + "px";
+            if (distance < 4000) {
+                if (placement.card == null) {
+                    setPosition(cardDiv, rect);
+                    if (card.placedOn != null)
+                        card.placedOn.card = null;
+                    card.placedOn = placement;
+                    placement.card = card;
+                }
+                else {
+                    if (card.placedOn != null) {
+                        let placedCard = placement.card;
+                        placedCard.placedOn = card.placedOn;
+                        if (placedCard.placedOn != null) {
+                            setPosition(placedCard.element, placedCard.placedOn.element.getBoundingClientRect());
+                            placedCard.placedOn.card = placedCard;
+                        }
+                        card.placedOn = placement;
+                        setPosition(cardDiv, placement.element.getBoundingClientRect());
+                        placement.card = card;
+                    }
+                    else {
+                        placement.card.placedOn = null;
+                        setPosition(placement.card.element, placement.card.spawn.getBoundingClientRect());
+                        setPosition(cardDiv, rect);
+                        card.placedOn = placement;
+                        placement.card = card;
+                    }
+                }
                 isPlaced = true;
-                card.placedOn = placement;
+                break;
             }
-        });
-        if (!isPlaced && card.spawn != null) {
+        }
+        if (!isPlaced) {
             const rect = card.spawn.getBoundingClientRect();
-            cardDiv.style.top = rect.top + "px";
-            cardDiv.style.left = rect.left + "px";
+            setPosition(cardDiv, rect);
+            if (card.placedOn != null)
+                card.placedOn.card = null;
             card.placedOn = null;
         }
     });
-    cardDiv.classList.add('card');
     return cardDiv;
 }
 function sqrDistance(x1, y1, x2, y2) {
@@ -168,16 +202,85 @@ function sqrDistance(x1, y1, x2, y2) {
     const dy = y2 - y1;
     return dx * dx + dy * dy;
 }
-function checkCards() {
-    let allPlaces = true;
-    for (let a of cards) {
-        if (a.placedOn === null) {
-            allPlaces = false;
-            break;
+function setPosition(element, rect) {
+    element.style.top = rect.top + "px";
+    element.style.left = rect.left + "px";
+}
+function moveCardsToWindowResize() {
+    for (let card of cards) {
+        if (card.placedOn != null) {
+            const rect = card.placedOn.element.getBoundingClientRect();
+            setPosition(card.element, rect);
+        }
+        else {
+            const rect = card.spawn.getBoundingClientRect();
+            setPosition(card.element, rect);
         }
     }
-    if (!allPlaces) {
-        alert("Please place all cards before checking!");
+}
+function checkCards() {
+    var _a;
+    if (attemptCount >= maxAttempts) {
+        alert("Maximum attempts reached!");
         return;
     }
+    for (let a of cards) {
+        if (a.placedOn == null) {
+            alert("Please place all cards before checking!");
+            return;
+        }
+    }
+    let i = 0;
+    let allCorrect = true;
+    for (let a of answer.keys()) {
+        if (((_a = placements[i].card) === null || _a === void 0 ? void 0 : _a.id) == a) {
+            let correctCard = placements[i].card;
+            if (correctCard != null) {
+                correctCard.element.classList.add("correctPlacement");
+                correctCard.correctlyPlaced = true;
+            }
+        }
+        else
+            allCorrect = false;
+        i++;
+    }
+    attemptCount++;
+    if (attemptCounterText != null)
+        attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+    if (allCorrect) {
+        showToast("You WIN!");
+        return;
+    }
+    if (attemptCount >= maxAttempts) {
+        showToast("Maximum attempts reached!, You LOSE!");
+        return;
+    }
+}
+function showToast(message, duration = 3000) {
+    const toast = document.createElement("div");
+    toast.textContent = message;
+    toast.style.position = "fixed";
+    toast.style.bottom = "40px";
+    toast.style.right = "40px";
+    toast.style.padding = "30px 40px";
+    toast.style.backgroundColor = "#222";
+    toast.style.color = "#fff";
+    toast.style.fontSize = "1.5rem";
+    toast.style.fontWeight = "bold";
+    toast.style.borderRadius = "16px";
+    toast.style.boxShadow = "0 8px 20px rgba(0,0,0,0.4)";
+    toast.style.zIndex = "9999";
+    toast.style.opacity = "0";
+    toast.style.transition = "opacity 0.5s ease, transform 0.3s ease";
+    toast.style.transform = "translateY(20px)";
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.style.opacity = "1";
+        toast.style.transform = "translateY(0)";
+    });
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(20px)";
+        setTimeout(() => toast.remove(), 500);
+    }, duration);
 }
