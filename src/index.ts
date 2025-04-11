@@ -50,7 +50,7 @@ function initGame()
   flimCount = filmDetails.length;
 
   initAnswer();
-  InitBoard();
+  InitPlayArea();
 }
 
 function initAnswer()
@@ -67,27 +67,30 @@ function initAnswer()
   );
 }
 
-function InitBoard(){
+function InitPlayArea(){
 
   const mainContent = document.getElementById('main-content') as HTMLElement;
   mainContent.setAttribute('draggable', "false");
-  mainContent.classList.add("playArea");
+  
+  const playArea = document.createElement("div");
+  playArea.classList.add("playArea");
+  mainContent.appendChild(playArea);
 
-  const board = document.createElement("div");
-  board.classList.add("board");
-  mainContent.appendChild(board);
+  const placementBoard = document.createElement("div");
+  placementBoard.classList.add("board", "placementBoard");
+  playArea.appendChild(placementBoard);
 
   const lowestRatedText = document.createElement("div");
 
   lowestRatedText.innerText = "Lowest\nRated"
   lowestRatedText.classList.add("placementDirectionText");
-  board.appendChild(lowestRatedText);
+  placementBoard.appendChild(lowestRatedText);
 
   for(let i = 0; i < flimCount; i++)
   {
     const cardPlacement = document.createElement("div")
-    cardPlacement.classList.add('cardPlacement');
-    board.appendChild(cardPlacement);
+    cardPlacement.classList.add('cardShape', 'cardPlacement');
+    placementBoard.appendChild(cardPlacement);
 
     const placemnt = new Placement(cardPlacement);
     placements.push(placemnt);
@@ -96,32 +99,32 @@ function InitBoard(){
   const highestRated = document.createElement("div");
   highestRated.innerText = "Highest\nRated"
   highestRated.classList.add("placementDirectionText");
-  board.appendChild(highestRated);
+  placementBoard.appendChild(highestRated);
 
-  const checkButtonPanel = document.createElement("div");
-  checkButtonPanel.classList.add("checkButtonPanel");
-  mainContent.appendChild(checkButtonPanel);
+  const checkButtonBoard = document.createElement("div");
+  checkButtonBoard.classList.add("board", "checkButtonBoard");
+  playArea.appendChild(checkButtonBoard);
 
   const checkButton = document.createElement("button");
   checkButton.innerText = "Check";
   checkButton.classList.add("checkButton");
-  checkButtonPanel.appendChild(checkButton);
+  checkButtonBoard.appendChild(checkButton);
   checkButton.addEventListener("click", checkCards);
 
   attemptCounterText = document.createElement("H2");
   attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
   attemptCounterText.classList.add("attemptCounter");
-  checkButtonPanel.appendChild(attemptCounterText);
+  checkButtonBoard.appendChild(attemptCounterText);
 
   const cardSpawnBoard = document.createElement("div");
-  cardSpawnBoard.classList.add("cardSpawnBoard");
-  mainContent.appendChild(cardSpawnBoard);
+  cardSpawnBoard.classList.add("board", "cardSpawnBoard");
+  playArea.appendChild(cardSpawnBoard);
 
   let cardSpawns = [] as HTMLElement[];
   for(let i = 0; i < flimCount; i++)
   {
     const cardSpawn = document.createElement("div")
-    cardSpawn.classList.add('cardSpawn');
+    cardSpawn.classList.add('cardShape', 'cardSpawn');
     cardSpawnBoard.appendChild(cardSpawn);
     cardSpawns.push(cardSpawn);
   }
@@ -150,7 +153,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardText.setAttribute('draggable', "false");
   cardDiv.appendChild(cardimg);
   cardDiv.appendChild(cardText);
-  cardDiv.classList.add('card');
+  cardDiv.classList.add('cardShape', 'card');
 
   cardDiv.addEventListener("pointerdown", (e: MouseEvent) => 
   {
