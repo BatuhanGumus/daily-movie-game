@@ -16,6 +16,11 @@ export const filmCollections = [
             rating: 7.6,
         },
         {
+            title: "Slender Man",
+            posterSrc: "https://m.media-amazon.com/images/M/MV5BMjE0MzcwMDAyNl5BMl5BanBnXkFtZTgwMzc4ODg0NDM@._V1_FMjpg_UY2000_.jpg",
+            rating: 3.3,
+        },
+        {
             title: "Perfect Blue",
             posterSrc: "https://m.media-amazon.com/images/M/MV5BMzAwNDIzMzEtZDZkNC00ZDQ4LTk3ZDMtZjVhMTU2YzgzZTZiXkEyXkFqcGc@._V1_.jpg",
             rating: 8.0,
@@ -52,12 +57,22 @@ export const filmCollections = [
             posterSrc: "https://m.media-amazon.com/images/M/MV5BODg5ZTNmMTUtYThlNy00NjljLWE0MGUtYmQ1NDg4NWU5MjQ1XkEyXkFqcGc@._V1_FMjpg_UY2048_.jpg",
             rating: 6.4,
         },
+        {
+            title: "Twilight",
+            posterSrc: "https://m.media-amazon.com/images/M/MV5BMTQ2NzUxMTAxN15BMl5BanBnXkFtZTcwMzEyMTIwMg@@._V1_.jpg",
+            rating: 5.3,
+        },
     ],
     [
         {
             title: "Ratatouille",
             posterSrc: "https://m.media-amazon.com/images/M/MV5BMTMzODU0NTkxMF5BMl5BanBnXkFtZTcwMjQ4MzMzMw@@._V1_FMjpg_UY2048_.jpg",
             rating: 8.1,
+        },
+        {
+            title: "Turks in Space",
+            posterSrc: "https://m.media-amazon.com/images/M/MV5BYWJhZGZlZjUtY2QwYS00Y2JkLWEzODUtZmNlODNiYmNiMmFkXkEyXkFqcGc@._V1_FMjpg_UX1077_.jpg",
+            rating: 1.5,
         },
         {
             title: "Fifty Shades of Grey",
@@ -95,6 +110,11 @@ export const filmCollections = [
             title: "Bullet Train",
             posterSrc: "https://m.media-amazon.com/images/M/MV5BODUyZjkxZDMtZGI3ZC00ZmEwLTgwMTUtYTU4OTQ5YjU4ZjRlXkEyXkFqcGc@._V1_FMjpg_UX1012_.jpg",
             rating: 7.3,
+        },
+        {
+            title: "Fifty Shades of Grey",
+            posterSrc: "https://m.media-amazon.com/images/M/MV5BMjE1MTM4NDAzOF5BMl5BanBnXkFtZTgwNTMwNjI0MzE@._V1_FMjpg_UY2048_.jpg",
+            rating: 4.2,
         },
         {
             title: "Star Wars: Episode IV",
