@@ -173,8 +173,8 @@ button:hover {
 
     img{
         width: 75%;
-        aspect-ratio: auto;
-        border-radius: 0.5rem;
+        height: auto;
+        border-radius: 0.5vw;
         user-select: none;
     }
 
