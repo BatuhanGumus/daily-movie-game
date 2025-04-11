@@ -51,11 +51,10 @@ function InitPlayArea() {
     playArea.classList.add("playArea");
     mainContent.appendChild(playArea);
     const placementBoard = document.createElement("div");
-    placementBoard.classList.add("board", "placementBoard");
+    placementBoard.classList.add("board", "placementBoard", "thickness");
     playArea.appendChild(placementBoard);
-    const lowestRatedText = document.createElement("div");
+    const lowestRatedText = document.createElement("H4");
     lowestRatedText.innerText = "Lowest\nRated";
-    lowestRatedText.classList.add("placementDirectionText");
     placementBoard.appendChild(lowestRatedText);
     for (let i = 0; i < flimCount; i++) {
         const cardPlacement = document.createElement("div");
@@ -64,12 +63,11 @@ function InitPlayArea() {
         const placemnt = new Placement(cardPlacement);
         placements.push(placemnt);
     }
-    const highestRated = document.createElement("div");
+    const highestRated = document.createElement("H4");
     highestRated.innerText = "Highest\nRated";
-    highestRated.classList.add("placementDirectionText");
     placementBoard.appendChild(highestRated);
     const checkButtonBoard = document.createElement("div");
-    checkButtonBoard.classList.add("board", "checkButtonBoard");
+    checkButtonBoard.classList.add("board", "checkButtonBoard", "thickness");
     playArea.appendChild(checkButtonBoard);
     const checkButton = document.createElement("button");
     checkButton.innerText = "Check";
@@ -81,7 +79,7 @@ function InitPlayArea() {
     attemptCounterText.classList.add("attemptCounter");
     checkButtonBoard.appendChild(attemptCounterText);
     const cardSpawnBoard = document.createElement("div");
-    cardSpawnBoard.classList.add("board", "cardSpawnBoard");
+    cardSpawnBoard.classList.add("board", "cardSpawnBoard", "thickness");
     playArea.appendChild(cardSpawnBoard);
     let cardSpawns = [];
     for (let i = 0; i < flimCount; i++) {
@@ -109,7 +107,7 @@ function InitCard(cardDiv, card, filmInfo) {
     cardText.setAttribute('draggable', "false");
     cardDiv.appendChild(cardimg);
     cardDiv.appendChild(cardText);
-    cardDiv.classList.add('cardShape', 'card');
+    cardDiv.classList.add('cardShape', 'card', "thickness");
     cardDiv.addEventListener("pointerdown", (e) => {
         if (card.correctlyPlaced)
             return;
@@ -204,12 +202,6 @@ function checkCards() {
     if (attemptCount >= maxAttempts) {
         alert("Maximum attempts reached!");
         return;
-    }
-    for (let a of cards) {
-        if (a.placedOn == null) {
-            alert("Please place all cards before checking!");
-            return;
-        }
     }
     let i = 0;
     let allCorrect = true;

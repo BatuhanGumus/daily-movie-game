@@ -66,9 +66,8 @@ button:hover {
 {
     background-color: #4b4b4b;
 
-    border-color: #282828;
     border-radius: 1.5vw;
-    border: 0.1rem solid;
+    border: 0.2vw solid #4b4b4b;
 
     text-align: center;
     padding: 2vw;
@@ -85,10 +84,10 @@ button:hover {
     padding-right: 1vw;
     padding-left: 1vw;
 
-    .placementDirectionText
+    H4
     {
-        font-size: 1.4vw;
-        color: #fff9ea;
+        font-size: 1.6vw;
+        color: #ffffff;
         margin: 1vw;
     }
 }
@@ -107,6 +106,8 @@ button:hover {
     padding-right: 0.8vw;
     padding-left: 0.8vw;
     border-top: 0;
+
+    transform: translate(0rem, -1vw);
 
     .checkButton
     {
@@ -157,8 +158,7 @@ button:hover {
 .cardShape.card {
     background-color: #ffd697;
     text-align: center;
-    border: 0.2vw solid;
-    border-color: #b3976a;
+    border: 0.2vw solid #ffd697;
     padding-top: 0.4vw;
 
     user-select: none;
@@ -180,8 +180,8 @@ button:hover {
 
     H3
     {
-        font-size: 0.9vw;
-        color: #333;
+        font-size: 1vw;
+        color: #57452c;
         margin: 0;
         margin-bottom: 0.5vw;
     }
@@ -189,11 +189,47 @@ button:hover {
 
 .cardShape.card.correctPlacement
 {
-    background-color: #9aff2d;
     cursor: pointer;
 }
+
+.cardShape.card.correctPlacement::after
+{
+    content: "";
+    background-color: #99ff2d5d;
+    border-radius: inherit;
+    border: 0.2vw solid #99ff2d5d;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: -0.15vw;
+    left: -0.15vw;
+    right: 0;
+    bottom: 0;
+}
+
 
 .cardShape.card.incorrectPlacement
 {
     background-color: #ff2d2d;
+}
+
+.thickness
+{
+    transform-style: preserve-3d;
+    transform: translate(0rem, -0.8vw);
+}
+.thickness::before 
+{
+    position: absolute;
+    content: "";
+    width: calc(100% + 0.38vw);
+    height: 100%;
+    top: 0;
+    left: -0.18vw;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: brightness(65%);
+    border-radius: inherit;
+    transform: translate3d(0, 0.8vw, -1rem);
 }
