@@ -1,3 +1,9 @@
+:root {
+    --card-width: 8vw;
+    --card-height: calc(var(--card-width) * 1.5);
+}
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -46,7 +52,6 @@ button:hover {
 
 .playArea
 {
-    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -57,7 +62,7 @@ button:hover {
 
 .board
 {
-    padding: 2rem;
+    padding: 2vw;
     background-color: #4b4b4b;
     text-align: center;
     border-radius: 1rem;
@@ -73,8 +78,8 @@ button:hover {
 
 .cardPlacement
 {
-    height: 18rem;
-    width: 12rem;
+    height: var(--card-height);
+    width: var(--card-width);
     background-color: #d3d3d364;
     text-align: center;
     border-radius: 1rem;
@@ -85,15 +90,16 @@ button:hover {
 
 .placementDirectionText
 {
-    font-size: 1.6rem;
+    font-size: 1vw;
     color: #fff9ea;
     margin: 1rem;
 }
 
 .checkButtonPanel
 {
-    height: 7rem;
-    width: 22rem;
+    padding-right: 0.8vw;
+    padding-left: 0.8vw;
+
     background-color: #4b4b4b;
     text-align: center;
     border-bottom-left-radius: 1rem;
@@ -110,26 +116,24 @@ button:hover {
 
 .checkButton
 {
-    height: 5rem;
-    width: 12rem;
+    width: 7vw;
+    aspect-ratio: 2/1;
     border-radius: 0.6rem;
 
-    font-size: 1.6rem;
+    font-size: 1.6vw;
     color: #fff9ea;
 }
 
 .attemptCounter
 {
-    font-size: 3rem;
+    font-size: 2vw;
     color: #fff9ea;
-    margin-left: 2rem;
+    margin-left: 1.4vw;
 }
 
 .cardSpawnBoard
 {
-    min-height: 20rem;
-    min-width: 70rem;
-    padding: 2rem;
+    padding: 2vw;
     background-color: #565656;
     text-align: center;
     border-radius: 1rem;
@@ -147,8 +151,8 @@ button:hover {
 
 .cardSpawn
 {
-    height: 18rem;
-    width: 12rem;
+    height: var(--card-height);
+    width: var(--card-width);
 
     border-radius: 1rem;
     border: 0.2rem dashed;
@@ -162,30 +166,33 @@ button:hover {
 }
 
 .card {
-    height: 18rem;
-    width: 12rem;
+    height: var(--card-height);
+    width: var(--card-width);
     background-color: #ffd697;
     text-align: center;
     border-radius: 1rem;
     border: 0.2rem solid;
     border-color: #b3976a;
     padding: 0.2rem;
+    padding-top: 0.6rem;
 
     user-select: none;
     cursor: grab;
 
     position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
     img{
-        height: 13rem;
-        width: 9rem;
+        width: 80%;
+        aspect-ratio: auto;
         border-radius: 0.5rem;
         user-select: none;
-        
+    }
+
+    H3
+    {
+        font-size: 0.9vw;
+        color: #333;
+        margin-top: 0;
     }
 }
 
