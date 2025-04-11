@@ -33,18 +33,6 @@ main {
     align-items: center;
 }
 
-button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
 #main-content
 {
     display: flex;
@@ -107,24 +95,31 @@ button:hover {
     padding-left: 0.8vw;
     border-top: 0;
 
-    transform: translate(0rem, -1vw);
-
     .checkButton
     {
-        width: 7vw;
-        aspect-ratio: 2/1;
-        border-radius: 0.6rem;
+        background-color: #4CAF50;
+        cursor: pointer;
         padding: 0;
+
+        width: 7vw;
+        height: 4vw;
+        border-radius: 1vw;
 
         font-size: 1.6vw;
         color: #fff9ea;
+        border: none;
+    }
+
+    .checkButton:hover
+    {
+        background-color: #45a049;
     }
 
     .attemptCounter
     {
         font-size: 2vw;
         color: #fff9ea;
-        margin-left: 1.4vw;
+        margin-right: 1.4vw;
     }
 }
 
@@ -192,12 +187,27 @@ button:hover {
     cursor: pointer;
 }
 
+@keyframes colorFade
+{
+    0% {
+         background-color: #ffffff00;
+         border-color: #ffffff00; 
+        }
+    100% { 
+        background-color: #99ff2d5d; 
+        border-color: #99ff2d5d;
+    }
+    
+}
+
 .cardShape.card.correctPlacement::after
 {
     content: "";
     background-color: #99ff2d5d;
-    border-radius: inherit;
     border: 0.2vw solid #99ff2d5d;
+    animation: colorFade 0.3s ease-in-out;
+    animation-iteration-count: 1;
+    border-radius: inherit;
     height: 100%;
     width: 100%;
     position: absolute;

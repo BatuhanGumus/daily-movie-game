@@ -69,15 +69,15 @@ function InitPlayArea() {
     const checkButtonBoard = document.createElement("div");
     checkButtonBoard.classList.add("board", "checkButtonBoard", "thickness");
     playArea.appendChild(checkButtonBoard);
+    attemptCounterText = document.createElement("H2");
+    attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
+    attemptCounterText.classList.add("attemptCounter");
+    checkButtonBoard.appendChild(attemptCounterText);
     const checkButton = document.createElement("button");
     checkButton.innerText = "Check";
     checkButton.classList.add("checkButton");
     checkButtonBoard.appendChild(checkButton);
     checkButton.addEventListener("click", checkCards);
-    attemptCounterText = document.createElement("H2");
-    attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
-    attemptCounterText.classList.add("attemptCounter");
-    checkButtonBoard.appendChild(attemptCounterText);
     const cardSpawnBoard = document.createElement("div");
     cardSpawnBoard.classList.add("board", "cardSpawnBoard", "thickness");
     playArea.appendChild(cardSpawnBoard);
@@ -205,8 +205,10 @@ function checkCards() {
     }
     let i = 0;
     let allCorrect = true;
+    let anyCardPlaced = false;
     for (let a of answer.keys()) {
         if (((_a = placements[i].card) === null || _a === void 0 ? void 0 : _a.id) == a) {
+            anyCardPlaced = true;
             let correctCard = placements[i].card;
             if (correctCard != null) {
                 correctCard.element.classList.add("correctPlacement");
@@ -216,6 +218,10 @@ function checkCards() {
         else
             allCorrect = false;
         i++;
+    }
+    if (!anyCardPlaced) {
+        showToast("No cad on the board to check!");
+        return;
     }
     attemptCount++;
     if (attemptCounterText != null)
