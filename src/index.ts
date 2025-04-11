@@ -78,7 +78,8 @@ function InitBoard(){
   mainContent.appendChild(board);
 
   const lowestRatedText = document.createElement("div");
-  lowestRatedText.innerText = "Lowest Rated"
+
+  lowestRatedText.innerText = "Lowest\nRated"
   lowestRatedText.classList.add("placementDirectionText");
   board.appendChild(lowestRatedText);
 
@@ -93,7 +94,7 @@ function InitBoard(){
   }
 
   const highestRated = document.createElement("div");
-  highestRated.innerText = "Highest Rated"
+  highestRated.innerText = "Highest\nRated"
   highestRated.classList.add("placementDirectionText");
   board.appendChild(highestRated);
 
@@ -108,7 +109,7 @@ function InitBoard(){
   checkButton.addEventListener("click", checkCards);
 
   attemptCounterText = document.createElement("H2");
-  attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+  attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
   attemptCounterText.classList.add("attemptCounter");
   checkButtonPanel.appendChild(attemptCounterText);
 
@@ -308,7 +309,7 @@ function checkCards()
 
   attemptCount++;
   if(attemptCounterText != null) 
-    attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+    attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
 
   if(allCorrect)
   {

@@ -52,7 +52,7 @@ function InitBoard() {
     board.classList.add("board");
     mainContent.appendChild(board);
     const lowestRatedText = document.createElement("div");
-    lowestRatedText.innerText = "Lowest Rated";
+    lowestRatedText.innerText = "Lowest\nRated";
     lowestRatedText.classList.add("placementDirectionText");
     board.appendChild(lowestRatedText);
     for (let i = 0; i < flimCount; i++) {
@@ -63,7 +63,7 @@ function InitBoard() {
         placements.push(placemnt);
     }
     const highestRated = document.createElement("div");
-    highestRated.innerText = "Highest Rated";
+    highestRated.innerText = "Highest\nRated";
     highestRated.classList.add("placementDirectionText");
     board.appendChild(highestRated);
     const checkButtonPanel = document.createElement("div");
@@ -75,7 +75,7 @@ function InitBoard() {
     checkButtonPanel.appendChild(checkButton);
     checkButton.addEventListener("click", checkCards);
     attemptCounterText = document.createElement("H2");
-    attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+    attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
     attemptCounterText.classList.add("attemptCounter");
     checkButtonPanel.appendChild(attemptCounterText);
     const cardSpawnBoard = document.createElement("div");
@@ -225,7 +225,7 @@ function checkCards() {
     }
     attemptCount++;
     if (attemptCounterText != null)
-        attemptCounterText.innerText = `${attemptCount}/${maxAttempts}`;
+        attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
     if (allCorrect) {
         showToast("You WIN!");
         return;

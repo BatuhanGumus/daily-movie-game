@@ -1,6 +1,9 @@
 :root {
     --card-width: 8vw;
     --card-height: calc(var(--card-width) * 1.5);
+
+    --card-border-radius: 1vw;
+    --board-border-radius: 1.5vw;
 }
 
 
@@ -63,9 +66,12 @@ button:hover {
 .board
 {
     padding: 2vw;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
     background-color: #4b4b4b;
     text-align: center;
-    border-radius: 1rem;
+    border-radius: var(--board-border-radius);
     border: 0.1rem solid;
     border-color: #282828;
 
@@ -82,17 +88,17 @@ button:hover {
     width: var(--card-width);
     background-color: #d3d3d364;
     text-align: center;
-    border-radius: 1rem;
+    border-radius: var(--card-border-radius);
     border: 0.1rem solid;
     border-color: #69696981;
-    margin: 0.6rem;
+    margin: 0.4vw;
 }
 
 .placementDirectionText
 {
-    font-size: 1vw;
+    font-size: 1.4vw;
     color: #fff9ea;
-    margin: 1rem;
+    margin: 1vw;
 }
 
 .checkButtonPanel
@@ -102,8 +108,8 @@ button:hover {
 
     background-color: #4b4b4b;
     text-align: center;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: var(--board-border-radius);
+    border-bottom-right-radius: var(--board-border-radius);
     border: 0.1rem solid;
     border-top: 0;
     border-color: #282828;
@@ -119,6 +125,7 @@ button:hover {
     width: 7vw;
     aspect-ratio: 2/1;
     border-radius: 0.6rem;
+    padding: 0;
 
     font-size: 1.6vw;
     color: #fff9ea;
@@ -136,7 +143,7 @@ button:hover {
     padding: 2vw;
     background-color: #565656;
     text-align: center;
-    border-radius: 1rem;
+    border-radius: var(--board-border-radius);
     border: 0.1rem solid;
     border-color: #585858;
 
@@ -146,7 +153,7 @@ button:hover {
     flex-wrap: nowrap;
     flex-direction: row;
 
-    margin-top: 4rem;
+    margin-top: 2vw;
 }
 
 .cardSpawn
@@ -154,15 +161,14 @@ button:hover {
     height: var(--card-height);
     width: var(--card-width);
 
-    border-radius: 1rem;
+    border-radius: var(--card-border-radius);
     border: 0.2rem dashed;
     border-color: #353535;
-    padding: 0.2rem;
 
     user-select: none;
     cursor: grab;
 
-    margin: 0.4rem;
+    margin: 0.4vw;
 }
 
 .card {
@@ -170,11 +176,10 @@ button:hover {
     width: var(--card-width);
     background-color: #ffd697;
     text-align: center;
-    border-radius: 1rem;
+    border-radius: var(--card-border-radius);
     border: 0.2rem solid;
     border-color: #b3976a;
-    padding: 0.2rem;
-    padding-top: 0.6rem;
+    padding-top: 0.4vw;
 
     user-select: none;
     cursor: grab;
