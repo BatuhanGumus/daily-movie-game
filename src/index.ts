@@ -57,7 +57,7 @@ function InitPlacementBoard()
   for(let i = 0; i < flimCount; i++)
   {
     const cardPlacement = document.createElement("div")
-    cardPlacement.classList.add('cardShape', 'cardPlacement');
+    cardPlacement.classList.add('cardShape', 'cardPlacement', 'hole');
     placementParent.appendChild(cardPlacement);
 
     const placemnt = new Placement(cardPlacement);
