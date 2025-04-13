@@ -1,4 +1,3 @@
-
 body {
     touch-action: none;
     font-family: Arial, sans-serif;
@@ -33,8 +32,13 @@ main {
     align-items: center;
 }
 
-#rotate-suggestion
-{
+button {
+    cursor: pointer;
+    user-select: none;
+    border: none;
+}
+
+#rotate-suggestion {
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -45,47 +49,38 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    
-    img
-    {
+
+    img {
         width: 6rem;
     }
 
-    h2
-    {
+    h2 {
         padding: 1rem;
         font-size: 1.2rem;
     }
 }
 
 @media (min-aspect-ratio: 3/4) {
-    #rotate-suggestion
-    {
+    #rotate-suggestion {
         display: none;
     }
 }
 
 
-#main-content
-{
+#main-content {
     width: 100%;
 }
 
-#play-area
-{
+#play-area {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.board
-{
+.board {
     background-color: #4b4b4b;
-
     border-radius: 1.5vw;
-
-    text-align: center;
     padding: 1.2vw;
 
     display: flex;
@@ -93,271 +88,144 @@ main {
     align-items: center;
     flex-wrap: nowrap;
     flex-direction: row;
+    text-align: center;
 }
 
-.board#placement-board
-{
-    padding-right: 0.6vw;
-    padding-left: 0.6vw;
+.board#placement-board {
+    padding-right: 0.7vw;
+    padding-left: 0.7vw;
 
-    H4
-    {
+    H4 {
+        margin: 0.5vw;
         font-size: 1.2vw;
         color: #ffffff;
-        margin: 0.5vw;
     }
 
-    #placement-parent
-    {
+    #placement-parent {
+        margin-bottom: 1vw;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-wrap: nowrap;
         flex-direction: row;
-        margin-bottom: 1vw;
     }
 }
 
-.board#card-spawn-board
-{
+.board#card-spawn-board {
     margin-top: 1.5vw;
     padding-bottom: 0.8vw;
 }
 
-.board#check-board
-{
+.board#check-board {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
-
-    padding: 0.5vw;
-    padding-right: 0.8vw;
-    padding-left: 0.8vw;
+    padding: 0.5vw 1cqb;
     border-top: 0;
-    margin-top: -0.1vw;
+    margin-top: -0.2vw;
 
-    #check-button
-    {
+    #check-button {
         background-color: #4CAF50;
-        cursor: pointer;
-        padding: 0;
 
         padding: 1vw 1.4vw;
         border-radius: 1vw;
 
         font-size: 1.2vw;
         color: #fff9ea;
-        border: none;
-
-        user-select: none;
     }
 
-    #check-button:hover
-    {
-        background-color: #45a049;
+    #check-button:hover {
+        background-color: #409144;
     }
 
-    #attempt-counter
-    {
+    #attempt-counter {
+        margin: 0 1vw 0 0;
         font-size: 1.6vw;
         color: #fff9ea;
-        margin: 0;
-        margin-right: 1.4vw;
         user-select: none;
     }
 }
 
-.cardShape
-{
+.cardShape {
     box-sizing: border-box;
     width: 8vw;
     height: 12vw;
     border-radius: 1vw;
 }
 
-.cardShape.cardPlacement
-{
+.cardShape.cardPlacement {
     background-color: #3a3a3a;
-    text-align: center;
     margin: 0.4vw;
 }
 
-.hole
-{
-    --depth: 1vw;
-    --layer: 0rem;
 
-    transform-style: preserve-3d;
-    transform: translate3d(0rem, var(--depth), var(--layer));
-}
-
-.hole::before 
-{
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    filter: brightness(65%);
-    border-radius: inherit;
-    transform: translate3d(0, calc(var(--depth) * -1), calc(var(--layer) - 1rem));
-    
-}
-
-
-.cardShape.cardSpawn
-{
+.cardShape.cardSpawn {
     border: 0.2vw dashed;
     border-color: #353535;
-
-    user-select: none;
-    cursor: grab;
-
     margin: 0.4vw;
 }
 
 .cardShape.card {
     background-color: #ffd697;
-    text-align: center;
-    padding-top: 0.4vw;
-    padding-right: 0.2vw;
-    padding-left: 0.2vw;
-
-    user-select: none;
-    cursor: grab;
+    padding: 0.4vw 0.2vw;
 
     position: absolute;
+    text-align: center;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    user-select: none;
+    cursor: grab;
 
-    img{
+    img {
         width: 78%;
         height: auto;
-        border-radius: 0.5vw;
+        border-radius: 0.7vw;
         user-select: none;
     }
 
-    H3
-    {
+    H3 {
         font-size: 0.8vw;
         color: #57452c;
         margin: 0;
-        margin-bottom: 0.5vw;
     }
 }
 
-.cardShape.card.correctPlacement
-{
+.cardShape.card.correctPlacement {
     cursor: pointer;
 }
 
-@keyframes colorFade
-{
+@keyframes colorFade {
     0% {
-         background-color: #ffffff00;
-         border-color: #ffffff00; 
-        }
-    100% { 
-        background-color: #99ff2d5d; 
+        background-color: #ffffff00;
+        border-color: #ffffff00;
+    }
+
+    100% {
+        background-color: #99ff2d5d;
         border-color: #99ff2d5d;
     }
-    
+
 }
 
-.cardShape.card.correctPlacement::after
-{
+.cardShape.card.correctPlacement::after {
     content: "";
     background-color: #99ff2d5d;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    
     animation: colorFade 0.3s ease-in-out;
     animation-iteration-count: 1;
-    border-radius: inherit;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 
-.cardShape.card.incorrectPlacement
-{
+.cardShape.card.incorrectPlacement {
     background-color: #ff2d2d;
-}
-
-.thickness
-{
-    --depth: 0.8vw;
-    --layer: 0rem;
-
-    transform-style: preserve-3d;
-    transform: translate3d(0rem, calc(var(--depth) * -1), var(--layer));
-}
-
-.thickness::before 
-{
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    filter: brightness(65%);
-    border-radius: inherit;
-    transform: translate3d(0, var(--depth), calc(var(--layer) - 1rem));
-}
-
-button.thickness:hover
-{
-
-    transform: translate3d(0, calc(var(--depth) * -0.8), var(--layer));
-}
-
-button.thickness:hover::before
-{
-    transform: translate3d(0, calc(var(--depth) * 0.8), calc(var(--layer) - 1rem));
-}
-
-button.thickness:active, 
-button.thickness.active
-{
-    transform: translate3d(0rem, 0, var(--layer));
-}
-
-button.thickness:active::before, 
-button.thickness.active::before
-{
-    transform: translate3d(0, 0, calc(var(--layer) - 1rem));
-}
-
-.thickness[data-thickness="1"] {
-    --depth: 0.5vw;
-}
-.thickness[data-thickness="2"] {
-    --depth: 0.7vw;
-}
-.thickness[data-thickness="3"] {
-    --depth: 0.9vw;
-}
-
-.thickness[data-thickness="4"] {
-    --depth: 1.1vw;
-}
-
-.thickness[data-layer="0"] {
-    --layer: 0;
-}
-
-.thickness[data-layer="1"] {
-    --layer: 0.5rem;
 }

@@ -1,0 +1,79 @@
+.three-dimensional {
+    --depth: 1vw;
+    --layer: 0rem;
+
+    transform-style: preserve-3d;
+}
+
+.three-dimensional::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: brightness(65%);
+    border-radius: inherit;
+}
+
+.three-dimensional.hole {
+    transform: translate3d(0, var(--depth), var(--layer));
+}
+
+.three-dimensional.hole::before {
+    transform: translate3d(0, calc(var(--depth) * -1), calc(var(--layer) - 1rem));
+}
+
+.three-dimensional.thickness {
+    transform: translate3d(0, calc(var(--depth) * -1), var(--layer));
+}
+
+.three-dimensional.thickness::before {
+    transform: translate3d(0, var(--depth), calc(var(--layer) - 1rem));
+}
+
+button.three-dimensional.thickness:hover {
+
+    transform: translate3d(0, calc(var(--depth) * -0.8), var(--layer));
+}
+
+button.three-dimensional.thickness:hover::before {
+    transform: translate3d(0, calc(var(--depth) * 0.8), calc(var(--layer) - 1rem));
+}
+
+button.three-dimensional.thickness:active,
+button.three-dimensional.thickness.active {
+    transform: translate3d(0, 0, var(--layer));
+}
+
+button.three-dimensional.thickness:active::before,
+button.three-dimensional.thickness.active::before {
+    transform: translate3d(0, 0, calc(var(--layer) - 1rem));
+}
+
+.three-dimensional.thickness[data-thickness="1"] {
+    --depth: 0.5vw;
+}
+
+.three-dimensional.thickness[data-thickness="2"] {
+    --depth: 0.7vw;
+}
+
+.three-dimensional.thickness[data-thickness="3"] {
+    --depth: 0.9vw;
+}
+
+.three-dimensional.thickness[data-thickness="4"] {
+    --depth: 1.1vw;
+}
+
+.three-dimensional.thickness[data-layer="0"] {
+    --layer: 0;
+}
+
+.three-dimensional.thickness[data-layer="1"] {
+    --layer: 0.5rem;
+}

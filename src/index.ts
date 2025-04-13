@@ -57,7 +57,7 @@ function InitPlacementBoard()
   for(let i = 0; i < flimCount; i++)
   {
     const cardPlacement = document.createElement("div")
-    cardPlacement.classList.add('cardShape', 'cardPlacement', 'hole');
+    cardPlacement.classList.add('cardShape', 'cardPlacement', 'three-dimensional', 'hole');
     placementParent.appendChild(cardPlacement);
 
     const placemnt = new Placement(cardPlacement);
@@ -115,7 +115,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardText.setAttribute('draggable', "false");
   cardDiv.appendChild(cardimg);
   cardDiv.appendChild(cardText);
-  cardDiv.classList.add('cardShape', 'card', "thickness");
+  cardDiv.classList.add('cardShape', 'card', 'three-dimensional', "thickness");
   cardDiv.dataset.thickness = "3";
 
   cardDiv.addEventListener("pointerdown", (e: MouseEvent) => 
