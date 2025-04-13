@@ -1,8 +1,18 @@
-export function sqrDistance(x1, y1, x2, y2) {
+export function rectDistance(rect1, rect2) {
+    const center1X = rect1.left + rect1.width / 2;
+    const center1Y = rect1.top + rect1.height / 2;
+    const center2X = rect2.left + rect2.width / 2;
+    const center2Y = rect2.top + rect2.height / 2;
+    return distance(center1X, center1Y, center2X, center2Y);
+}
+function distance(x1, y1, x2, y2) {
     const dx = x2 - x1;
     const dy = y2 - y1;
-    return dx * dx + dy * dy;
+    return Math.sqrt(dx * dx + dy * dy);
 }
+export const vw = (percent) => {
+    return window.innerWidth * (percent / 100);
+};
 export function setPosition(element, rect) {
     element.style.top = rect.top + "px";
     element.style.left = rect.left + "px";

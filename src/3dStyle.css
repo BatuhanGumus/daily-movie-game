@@ -63,11 +63,11 @@ button.three-dimensional.thickness.active::before {
 }
 
 .three-dimensional.thickness[data-thickness="3"] {
-    --depth: 0.9vw;
+    --depth: 1vw;
 }
 
 .three-dimensional.thickness[data-thickness="4"] {
-    --depth: 1.1vw;
+    --depth: 1.2vw;
 }
 
 .three-dimensional.thickness[data-layer="0"] {

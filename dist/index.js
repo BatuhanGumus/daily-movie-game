@@ -1,10 +1,12 @@
-import { filmCollections } from './database.js';
-import { sqrDistance, setPosition, showToast } from './util.js';
+import { collections } from './database.js';
+import { rectDistance, setPosition, showToast, vw } from './util.js';
 import { Card, Placement } from './definitions.js';
-let flimCount = 0;
-let filmDetails;
+let todaysSet;
+let setSize = 0;
 let cards = [];
-let placements = [];
+let answerPlacements = [];
+let spawnPlacement = [];
+let allPlacements = [];
 let answer = new Map();
 let attemptCount = 0;
 let maxAttempts = 3;
@@ -16,13 +18,14 @@ function initGame() {
     InitPlayArea();
 }
 function initAnswer() {
-    const random = Math.floor(Math.random() * filmCollections.length);
-    filmDetails = filmCollections[random];
-    flimCount = filmDetails.length;
+    const topicCollection = collections.filmsByRating;
+    const random = Math.floor(Math.random() * topicCollection.length);
+    todaysSet = topicCollection[random];
+    setSize = todaysSet.length;
     let i = 0;
     let pullData = new Map();
-    for (let film of filmDetails) {
-        pullData.set(i, film.rating);
+    for (let setItem of todaysSet) {
+        pullData.set(i, setItem.sortValue);
         i++;
     }
     answer = new Map([...pullData.entries()].sort((a, b) => a[1] - b[1]));
@@ -34,139 +37,101 @@ function InitPlayArea() {
 }
 function InitPlacementBoard() {
     const placementParent = document.getElementById("placement-parent");
-    const lowestRatedText = document.getElementById("lowest-text");
-    lowestRatedText.innerText = "Lowest\nRated";
-    for (let i = 0; i < flimCount; i++) {
+    document.getElementById("lowest-text").innerText = "Lowest\nRated";
+    document.getElementById("highest-text").innerText = "Highest\nRated";
+    for (let i = 0; i < setSize; i++) {
         const cardPlacement = document.createElement("div");
         cardPlacement.classList.add('card-shape', 'card-placement', 'three-dimensional', 'hole');
         placementParent.appendChild(cardPlacement);
         const placemnt = new Placement(cardPlacement);
-        placements.push(placemnt);
+        answerPlacements.push(placemnt);
+        allPlacements.push(placemnt);
     }
-    const highestRated = document.getElementById("highest-text");
-    highestRated.innerText = "Highest\nRated";
 }
 function InitCheckBoard() {
     attemptCounterText = document.getElementById("attempt-counter");
     attemptCounterText.innerText = `❤️`.repeat(maxAttempts);
-    const checkButton = document.getElementById("check-button");
-    checkButton.addEventListener("click", checkCards);
+    document.getElementById("check-button").addEventListener("click", checkCards);
 }
 function InitSpawnBoard() {
     const mainContent = document.getElementById('main-content');
-    mainContent.setAttribute('draggable', "false");
     const cardSpawnBoard = document.getElementById("card-spawn-board");
-    let cardSpawns = [];
-    for (let i = 0; i < flimCount; i++) {
+    for (let i = 0; i < setSize; i++) {
         const cardSpawn = document.createElement("div");
         cardSpawn.classList.add('card-shape', 'card-spawn');
         cardSpawnBoard.appendChild(cardSpawn);
-        cardSpawns.push(cardSpawn);
+        const placemnt = new Placement(cardSpawn);
+        spawnPlacement.push(placemnt);
+        allPlacements.push(placemnt);
     }
-    for (let i = 0; i < flimCount; i++) {
-        const cardDiv = document.createElement("div");
-        let card = new Card(cardDiv, cardSpawns[i], i);
-        InitCard(cardDiv, card, filmDetails[i]);
-        mainContent.appendChild(cardDiv);
+    for (let i = 0; i < setSize; i++) {
+        let card = new Card(todaysSet[i], spawnPlacement[i], i);
+        InitCard(card);
+        mainContent.appendChild(card.element);
         cards.push(card);
-        const rect = card.spawn.getBoundingClientRect();
-        setPosition(cardDiv, rect);
+        setPosition(card.element, card.placedOn.rect());
     }
 }
-function InitCard(cardDiv, card, filmInfo) {
-    const cardimg = document.createElement("img");
-    const cardText = document.createElement('H3');
-    cardimg.src = filmInfo.posterSrc;
-    cardText.innerHTML = filmInfo.title;
-    cardimg.setAttribute('draggable', "false");
-    cardText.setAttribute('draggable', "false");
-    cardDiv.appendChild(cardimg);
-    cardDiv.appendChild(cardText);
-    cardDiv.classList.add('card-shape', 'card', 'three-dimensional', "thickness");
-    cardDiv.dataset.thickness = "3";
-    cardDiv.addEventListener("pointerdown", (e) => {
+function InitCard(card) {
+    card.element.addEventListener("pointerdown", (e) => {
         if (card.correctlyPlaced)
             return;
         card.isDragging = true;
-        card.offsetX = e.clientX - cardDiv.offsetLeft;
-        card.offsetY = e.clientY - cardDiv.offsetTop;
-        cardDiv.style.cursor = "grabbing";
-        cardDiv.style.zIndex = "1000";
+        card.offsetX = e.clientX - card.element.offsetLeft;
+        card.offsetY = e.clientY - card.element.offsetTop;
+        card.element.style.cursor = "grabbing";
+        card.element.style.zIndex = "1000";
     });
     document.addEventListener("pointermove", (e) => {
         if (card.isDragging) {
-            cardDiv.style.left = `${e.clientX - card.offsetX}px`;
-            cardDiv.style.top = `${e.clientY - card.offsetY}px`;
+            card.element.style.left = `${e.clientX - card.offsetX}px`;
+            card.element.style.top = `${e.clientY - card.offsetY}px`;
         }
     });
     document.addEventListener("pointerup", () => {
         if (!card.isDragging)
             return;
         card.isDragging = false;
-        cardDiv.style.cursor = "grab";
-        cardDiv.style.zIndex = "1";
-        let isPlaced = false;
-        const cardRect = cardDiv.getBoundingClientRect();
-        for (let placement of placements) {
-            const rect = placement.element.getBoundingClientRect();
-            const distance = sqrDistance(rect.left + rect.width / 2, rect.top + rect.height / 2, cardRect.left + cardRect.width / 2, cardRect.top + cardRect.height / 2);
-            if (distance < 4000) {
-                if (placement.card == null) {
-                    setPosition(cardDiv, rect);
-                    if (card.placedOn != null)
-                        card.placedOn.card = null;
+        card.element.style.cursor = "grab";
+        card.element.style.zIndex = "1";
+        const cardRect = card.rect();
+        for (let placement of allPlacements) {
+            const placementRect = placement.rect();
+            const distance = rectDistance(cardRect, placementRect);
+            if (distance < vw(5)) {
+                if (placement.cardOnIt == null) {
+                    card.placedOn.cardOnIt = null;
                     card.placedOn = placement;
-                    placement.card = card;
-                    isPlaced = true;
+                    placement.cardOnIt = card;
+                    card.MoveToPlaced();
                 }
-                else if (placement.card.correctlyPlaced == false) {
-                    if (card.placedOn != null) {
-                        let placedCard = placement.card;
-                        placedCard.placedOn = card.placedOn;
-                        if (placedCard.placedOn != null) {
-                            setPosition(placedCard.element, placedCard.placedOn.element.getBoundingClientRect());
-                            placedCard.placedOn.card = placedCard;
-                        }
-                        card.placedOn = placement;
-                        setPosition(cardDiv, placement.element.getBoundingClientRect());
-                        placement.card = card;
+                else {
+                    if (placement.cardOnIt.correctlyPlaced) {
+                        card.MoveToPlaced();
                     }
                     else {
-                        placement.card.placedOn = null;
-                        setPosition(placement.card.element, placement.card.spawn.getBoundingClientRect());
-                        setPosition(cardDiv, rect);
+                        placement.cardOnIt.placedOn = card.placedOn;
+                        card.placedOn.cardOnIt = placement.cardOnIt;
+                        placement.cardOnIt.MoveToPlaced();
                         card.placedOn = placement;
-                        placement.card = card;
+                        placement.cardOnIt = card;
+                        card.MoveToPlaced();
                     }
-                    isPlaced = true;
                 }
-                break;
+            }
+            else {
+                card.MoveToPlaced();
             }
         }
-        if (!isPlaced) {
-            const rect = card.spawn.getBoundingClientRect();
-            setPosition(cardDiv, rect);
-            if (card.placedOn != null)
-                card.placedOn.card = null;
-            card.placedOn = null;
-        }
     });
-    return cardDiv;
 }
 function moveCardsToWindowResize() {
     for (let card of cards) {
-        if (card.placedOn != null) {
-            const rect = card.placedOn.element.getBoundingClientRect();
-            setPosition(card.element, rect);
-        }
-        else {
-            const rect = card.spawn.getBoundingClientRect();
-            setPosition(card.element, rect);
-        }
+        setPosition(card.element, card.placedOn.rect());
     }
 }
 function checkCards() {
-    var _a;
+    var _a, _b;
     if (attemptCount >= maxAttempts) {
         alert("Maximum attempts reached!");
         return;
@@ -175,10 +140,11 @@ function checkCards() {
     let allCorrect = true;
     let anyCardPlaced = false;
     for (let a of answer.keys()) {
-        if (placements[i].card != null) {
-            anyCardPlaced = true;
-            if (((_a = placements[i].card) === null || _a === void 0 ? void 0 : _a.id) == a) {
-                let correctCard = placements[i].card;
+        if (answerPlacements[i].cardOnIt != null) {
+            if (!((_a = answerPlacements[i].cardOnIt) === null || _a === void 0 ? void 0 : _a.correctlyPlaced))
+                anyCardPlaced = true;
+            if (((_b = answerPlacements[i].cardOnIt) === null || _b === void 0 ? void 0 : _b.id) == a) {
+                let correctCard = answerPlacements[i].cardOnIt;
                 if (correctCard != null) {
                     correctCard.element.classList.add("correct-placement");
                     correctCard.correctlyPlaced = true;
