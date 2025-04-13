@@ -1,0 +1,57 @@
+export function sqrDistance(x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    return dx * dx + dy * dy;
+}
+export function setPosition(element, rect) {
+    element.style.top = rect.top + "px";
+    element.style.left = rect.left + "px";
+}
+export function AnimateToPosition(element, rect) {
+    var elementRect = element.getBoundingClientRect();
+    const animation = element.animate([
+        {
+            top: `${elementRect.top}px`,
+            left: `${elementRect.left}px`
+        },
+        {
+            top: `${rect.top}px`,
+            left: `${rect.left}px`
+        }
+    ], {
+        duration: 100,
+        fill: 'forwards',
+        easing: 'ease-in-out',
+    });
+    animation.onfinish = () => {
+        setPosition(element, rect);
+    };
+}
+export function showToast(message, duration = 3000) {
+    const toast = document.createElement("div");
+    toast.textContent = message;
+    toast.style.position = "fixed";
+    toast.style.bottom = "40px";
+    toast.style.right = "40px";
+    toast.style.padding = "30px 40px";
+    toast.style.backgroundColor = "#222";
+    toast.style.color = "#fff";
+    toast.style.fontSize = "1.5rem";
+    toast.style.fontWeight = "bold";
+    toast.style.borderRadius = "16px";
+    toast.style.boxShadow = "0 8px 20px rgba(0,0,0,0.4)";
+    toast.style.zIndex = "9999";
+    toast.style.opacity = "0";
+    toast.style.transition = "opacity 0.5s ease, transform 0.3s ease";
+    toast.style.transform = "translateY(20px)";
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.style.opacity = "1";
+        toast.style.transform = "translateY(0)";
+    });
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(20px)";
+        setTimeout(() => toast.remove(), 500);
+    }, duration);
+}

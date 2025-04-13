@@ -10,9 +10,22 @@
 <body>
     <main>
         <div id="main-content">
+            <div id="play-area">
+                <div id="placement-board" class="board thickness">
+                    <h4 id="lowest-text">Lowest</h4>
+                    <div id="placement-parent"></div>
+                    <h4 id="highest-text">Highest</h4>
+                </div>
+                <div id="check-board" class="board thickness">
+                    <h2 id="attempt-counter">❤️❤️❤️</h2>
+                    <Button id="check-button">Check</Button>
+                </div>
+                <div id="card-spawn-board" class="board thickness"></div>
+            </div>
         </div>
     </main>
     <script type="module"  src="dist/database.js"></script>
+    <script type="module"  src="dist/util.js"></script>
     <script type="module"  src="dist/index.js"></script>
 </body>
 </html>

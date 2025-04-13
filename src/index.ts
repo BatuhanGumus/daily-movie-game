@@ -1,4 +1,5 @@
 import { filmCollections } from './database.js';
+import { sqrDistance, setPosition, AnimateToPosition, showToast } from './util.js';
 
 class Card
 {
@@ -69,53 +70,46 @@ function initAnswer()
 
 function InitPlayArea(){
 
-  const mainContent = document.getElementById('main-content') as HTMLElement;
-  mainContent.setAttribute('draggable', "false");
-  
-  const playArea = document.createElement("div");
-  playArea.classList.add("playArea");
-  mainContent.appendChild(playArea);
+  InitPlacementBoard();
+  InitCheckBoard(); 
+  InitSpawnBoard();  
+}
 
-  const placementBoard = document.createElement("div");
-  placementBoard.classList.add("board", "placementBoard", "thickness");
-  playArea.appendChild(placementBoard);
+function InitPlacementBoard()
+{
+  const placementParent = document.getElementById("placement-parent") as HTMLElement;
 
-  const lowestRatedText = document.createElement("H4");
+  const lowestRatedText = document.getElementById("lowest-text") as HTMLElement;
   lowestRatedText.innerText = "Lowest\nRated"
-  placementBoard.appendChild(lowestRatedText);
 
   for(let i = 0; i < flimCount; i++)
   {
     const cardPlacement = document.createElement("div")
     cardPlacement.classList.add('cardShape', 'cardPlacement');
-    placementBoard.appendChild(cardPlacement);
+    placementParent.appendChild(cardPlacement);
 
     const placemnt = new Placement(cardPlacement);
     placements.push(placemnt);
   }
 
-  const highestRated = document.createElement("H4");
+  const highestRated = document.getElementById("highest-text") as HTMLElement;
   highestRated.innerText = "Highest\nRated"
-  placementBoard.appendChild(highestRated);
+}
 
-  const checkButtonBoard = document.createElement("div");
-  checkButtonBoard.classList.add("board", "checkButtonBoard", "thickness");
-  playArea.appendChild(checkButtonBoard);
+function InitCheckBoard()
+{
+  attemptCounterText = document.getElementById("attempt-counter") as HTMLElement;
+  attemptCounterText.innerText = `❤️❤️❤️`;
 
-  attemptCounterText = document.createElement("H2");
-  attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
-  attemptCounterText.classList.add("attemptCounter");
-  checkButtonBoard.appendChild(attemptCounterText);
-
-  const checkButton = document.createElement("button");
-  checkButton.innerText = "Check";
-  checkButton.classList.add("checkButton");
-  checkButtonBoard.appendChild(checkButton);
+  const checkButton = document.getElementById("check-button") as HTMLElement;
   checkButton.addEventListener("click", checkCards);
+}
 
-  const cardSpawnBoard = document.createElement("div");
-  cardSpawnBoard.classList.add("board", "cardSpawnBoard", "thickness");
-  playArea.appendChild(cardSpawnBoard);
+function InitSpawnBoard()
+{
+  const mainContent = document.getElementById('main-content') as HTMLElement;
+  mainContent.setAttribute('draggable', "false");
+  const cardSpawnBoard = document.getElementById("card-spawn-board") as HTMLElement;
 
   let cardSpawns = [] as HTMLElement[];
   for(let i = 0; i < flimCount; i++)
@@ -138,7 +132,6 @@ function InitPlayArea(){
       setPosition(cardDiv, rect);
   }
 }
-
 
 function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElement
 {
@@ -191,7 +184,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
 
       if (distance < 4000) {
         if(placement.card == null)
-          {
+        {
           setPosition(cardDiv, rect);
           if(card.placedOn != null) card.placedOn.card = null;
           card.placedOn = placement;
@@ -242,18 +235,6 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   return cardDiv;
 }
 
-function sqrDistance(x1: number, y1: number, x2: number, y2: number): number {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  return dx * dx + dy * dy;
-}
-
-function setPosition(element :HTMLElement, rect :DOMRect)
-{
-  element.style.top = rect.top + "px";
-  element.style.left = rect.left + "px";
-}
-
 function moveCardsToWindowResize()
 {
   for(let card of cards)
@@ -284,38 +265,46 @@ function checkCards()
   let anyCardPlaced = false;
   for(let a of answer.keys())
   {
-    if(placements[i].card?.id == a)
+    if(placements[i].card != null)
     {
       anyCardPlaced = true;
-      let correctCard = placements[i].card;
-      if(correctCard != null)
-      {
-        correctCard.element.classList.add("correctPlacement");
-        correctCard.correctlyPlaced = true;
+      if(placements[i].card?.id == a)
+      {        
+        let correctCard = placements[i].card;
+        if(correctCard != null)
+        {
+          correctCard.element.classList.add("correctPlacement");
+          correctCard.correctlyPlaced = true;
+        }
       }
+      else
+        allCorrect = false;
     }
-    else
-      allCorrect = false;
-
     i++;
   }
 
   if(!anyCardPlaced)
   {
-    showToast("No cad on the board to check!");
+    showToast("No card on the board to check!");
     return;
   }
+
+  if(allCorrect)
+    {
+      showToast("You WIN!");
+      return;
+    }
 
   attemptCount++;
   if(attemptCounterText != null) 
-    attemptCounterText.innerText = `${attemptCount}/${maxAttempts} tries`;
-
-  if(allCorrect)
-  {
-    showToast("You WIN!");
-    return;
-  }
-  
+    if(attemptCount == 0)
+      attemptCounterText.innerText = `❤️❤️❤️`;
+    else if(attemptCount == 1)
+      attemptCounterText.innerText = `❤️❤️💔`;
+    else if(attemptCount == 2)
+      attemptCounterText.innerText = `❤️💔💔`;
+    else if(attemptCount == 3)
+      attemptCounterText.innerText = `💔💔💔`;
 
   if(attemptCount >= maxAttempts)
   {
@@ -324,33 +313,3 @@ function checkCards()
   }
 }
 
-function showToast(message: string, duration = 3000) {
-  const toast = document.createElement("div");
-  toast.textContent = message;
-  toast.style.position = "fixed";
-  toast.style.bottom = "40px";
-  toast.style.right = "40px";
-  toast.style.padding = "30px 40px";
-  toast.style.backgroundColor = "#222";
-  toast.style.color = "#fff";
-  toast.style.fontSize = "1.5rem";
-  toast.style.fontWeight = "bold";
-  toast.style.borderRadius = "16px";
-  toast.style.boxShadow = "0 8px 20px rgba(0,0,0,0.4)";
-  toast.style.zIndex = "9999";
-  toast.style.opacity = "0";
-  toast.style.transition = "opacity 0.5s ease, transform 0.3s ease";
-  toast.style.transform = "translateY(20px)";
-
-  document.body.appendChild(toast);
-  requestAnimationFrame(() => {
-    toast.style.opacity = "1";
-    toast.style.transform = "translateY(0)";
-  });
-
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform = "translateY(20px)";
-    setTimeout(() => toast.remove(), 500);
-  }, duration);
-}

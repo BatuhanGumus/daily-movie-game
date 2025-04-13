@@ -43,7 +43,7 @@ main {
     width: 100%;
 }
 
-.playArea
+#play-area
 {
     display: flex;
     justify-content: center;
@@ -68,7 +68,7 @@ main {
     flex-direction: row;
 }
 
-.board.placementBoard
+.board#placement-board
 {
     padding-right: 1vw;
     padding-left: 1vw;
@@ -79,14 +79,23 @@ main {
         color: #ffffff;
         margin: 1vw;
     }
+
+    #placement-parent
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        flex-direction: row;
+    }
 }
 
-.board.cardSpawnBoard
+.board#card-spawn-board
 {
-    margin-top: 2vw;
+    margin-top: 1.5vw;
 }
 
-.board.checkButtonBoard
+.board#check-board
 {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -96,7 +105,7 @@ main {
     padding-left: 0.8vw;
     border-top: 0;
 
-    .checkButton
+    #check-button
     {
         background-color: #4CAF50;
         cursor: pointer;
@@ -109,18 +118,21 @@ main {
         font-size: 1.6vw;
         color: #fff9ea;
         border: none;
+
+        user-select: none;
     }
 
-    .checkButton:hover
+    #check-button:hover
     {
         background-color: #45a049;
     }
 
-    .attemptCounter
+    #attempt-counter
     {
         font-size: 2vw;
         color: #fff9ea;
         margin-right: 1.4vw;
+        user-select: none;
     }
 }
 
