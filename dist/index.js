@@ -185,6 +185,8 @@ function checkCards() {
             else
                 allCorrect = false;
         }
+        else
+            allCorrect = false;
         i++;
     }
     if (!anyCardPlaced) {
