@@ -1,24 +1,6 @@
 import { filmCollections } from './database.js';
 import { sqrDistance, setPosition, showToast } from './util.js';
-class Card {
-    constructor(element, spawn, id) {
-        this.correctlyPlaced = false;
-        this.isDragging = false;
-        this.offsetX = 0;
-        this.offsetY = 0;
-        this.placedOn = null;
-        this.id = 0;
-        this.element = element;
-        this.spawn = spawn;
-        this.id = id;
-    }
-}
-class Placement {
-    constructor(element) {
-        this.card = null;
-        this.element = element;
-    }
-}
+import { Card, Placement } from './definitions.js';
 let flimCount = 0;
 let filmDetails;
 let cards = [];
@@ -30,13 +12,13 @@ let attemptCounterText = null;
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
 function initGame() {
-    const random = Math.floor(Math.random() * filmCollections.length);
-    filmDetails = filmCollections[random];
-    flimCount = filmDetails.length;
     initAnswer();
     InitPlayArea();
 }
 function initAnswer() {
+    const random = Math.floor(Math.random() * filmCollections.length);
+    filmDetails = filmCollections[random];
+    flimCount = filmDetails.length;
     let i = 0;
     let pullData = new Map();
     for (let film of filmDetails) {
@@ -66,7 +48,7 @@ function InitPlacementBoard() {
 }
 function InitCheckBoard() {
     attemptCounterText = document.getElementById("attempt-counter");
-    attemptCounterText.innerText = `❤️❤️❤️`;
+    attemptCounterText.innerText = `❤️`.repeat(maxAttempts);
     const checkButton = document.getElementById("check-button");
     checkButton.addEventListener("click", checkCards);
 }
@@ -215,14 +197,7 @@ function checkCards() {
     }
     attemptCount++;
     if (attemptCounterText != null)
-        if (attemptCount == 0)
-            attemptCounterText.innerText = `❤️❤️❤️`;
-        else if (attemptCount == 1)
-            attemptCounterText.innerText = `❤️❤️💔`;
-        else if (attemptCount == 2)
-            attemptCounterText.innerText = `❤️💔💔`;
-        else if (attemptCount == 3)
-            attemptCounterText.innerText = `💔💔💔`;
+        attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "💔".repeat(attemptCount);
     if (attemptCount >= maxAttempts) {
         showToast("Maximum attempts reached!, You LOSE!");
         return;

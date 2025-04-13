@@ -1,34 +1,6 @@
 import { filmCollections } from './database.js';
 import { sqrDistance, setPosition, AnimateToPosition, showToast } from './util.js';
-
-class Card
-{
-  correctlyPlaced = false;
-  isDragging = false;
-  offsetX = 0;
-  offsetY = 0;
-  element : HTMLElement;
-  spawn : HTMLElement;
-  placedOn : Placement | null = null;
-  id = 0;
-
-  constructor(element :HTMLElement, spawn :HTMLElement, id :number) 
-  {
-    this.element = element;
-    this.spawn = spawn;
-    this.id = id;
-  }
-}
-
-class Placement
-{
-  card : Card | null = null;
-  element : HTMLElement;
-
-  constructor(element :HTMLElement) {
-    this.element = element;
-  }
-}
+import { Card, Placement } from './definitions.js';
 
 
 let flimCount = 0;
@@ -46,16 +18,16 @@ window.addEventListener("resize", moveCardsToWindowResize);
 
 function initGame()
 {
-  const random = Math.floor(Math.random() * filmCollections.length);
-  filmDetails = filmCollections[random];
-  flimCount = filmDetails.length;
-
   initAnswer();
   InitPlayArea();
 }
 
 function initAnswer()
 {
+  const random = Math.floor(Math.random() * filmCollections.length);
+  filmDetails = filmCollections[random];
+  flimCount = filmDetails.length;
+
   let i = 0;
   let pullData = new Map<number, number>();
   for(let film of filmDetails)
@@ -99,7 +71,7 @@ function InitPlacementBoard()
 function InitCheckBoard()
 {
   attemptCounterText = document.getElementById("attempt-counter") as HTMLElement;
-  attemptCounterText.innerText = `❤️❤️❤️`;
+  attemptCounterText.innerText = `❤️`.repeat(maxAttempts);
 
   const checkButton = document.getElementById("check-button") as HTMLElement;
   checkButton.addEventListener("click", checkCards);
@@ -297,14 +269,7 @@ function checkCards()
 
   attemptCount++;
   if(attemptCounterText != null) 
-    if(attemptCount == 0)
-      attemptCounterText.innerText = `❤️❤️❤️`;
-    else if(attemptCount == 1)
-      attemptCounterText.innerText = `❤️❤️💔`;
-    else if(attemptCount == 2)
-      attemptCounterText.innerText = `❤️💔💔`;
-    else if(attemptCount == 3)
-      attemptCounterText.innerText = `💔💔💔`;
+    attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "💔".repeat(attemptCount);
 
   if(attemptCount >= maxAttempts)
   {

@@ -36,10 +36,6 @@ main {
 
 #main-content
 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     width: 100%;
 }
 
@@ -59,7 +55,7 @@ main {
     border: 0.2vw solid #4b4b4b;
 
     text-align: center;
-    padding: 2vw;
+    padding: 1.2vw;
 
     display: flex;
     justify-content: center;
@@ -70,14 +66,14 @@ main {
 
 .board#placement-board
 {
-    padding-right: 1vw;
-    padding-left: 1vw;
+    padding-right: 0.5vw;
+    padding-left: 0.5vw;
 
     H4
     {
-        font-size: 1.6vw;
+        font-size: 1.2vw;
         color: #ffffff;
-        margin: 1vw;
+        margin: 0.5vw;
     }
 
     #placement-parent
@@ -100,10 +96,11 @@ main {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
 
-    padding: 0;
+    padding: 0.5vw;
     padding-right: 0.8vw;
     padding-left: 0.8vw;
     border-top: 0;
+    margin-top: -0.1vw;
 
     #check-button
     {
@@ -111,11 +108,10 @@ main {
         cursor: pointer;
         padding: 0;
 
-        width: 7vw;
-        height: 4vw;
+        padding: 1vw 1.4vw;
         border-radius: 1vw;
 
-        font-size: 1.6vw;
+        font-size: 1.2vw;
         color: #fff9ea;
         border: none;
 
@@ -129,8 +125,9 @@ main {
 
     #attempt-counter
     {
-        font-size: 2vw;
+        font-size: 1.6vw;
         color: #fff9ea;
+        margin: 0;
         margin-right: 1.4vw;
         user-select: none;
     }
@@ -138,8 +135,8 @@ main {
 
 .cardShape
 {
-    width: 10vw;
-    height: 14vw;
+    width: 8vw;
+    height: 12vw;
     border-radius: 1vw;
 }
 
@@ -180,7 +177,7 @@ main {
     justify-content: space-between;
 
     img{
-        width: 75%;
+        width: 80%;
         height: auto;
         border-radius: 0.5vw;
         user-select: none;
@@ -188,7 +185,7 @@ main {
 
     H3
     {
-        font-size: 1vw;
+        font-size: 0.8vw;
         color: #57452c;
         margin: 0;
         margin-bottom: 0.5vw;
