@@ -145,26 +145,26 @@ button {
     }
 }
 
-.cardShape {
+.card-shape {
     box-sizing: border-box;
     width: 8vw;
     height: 12vw;
     border-radius: 1vw;
 }
 
-.cardShape.cardPlacement {
+.card-shape.card-placement {
     background-color: #3a3a3a;
     margin: 0.4vw;
 }
 
 
-.cardShape.cardSpawn {
+.card-shape.card-spawn {
     border: 0.2vw dashed;
     border-color: #353535;
     margin: 0.4vw;
 }
 
-.cardShape.card {
+.card-shape.card {
     background-color: #ffd697;
     padding: 0.4vw 0.2vw;
 
@@ -192,26 +192,9 @@ button {
     }
 }
 
-.cardShape.card.correctPlacement {
-    cursor: pointer;
-}
-
-@keyframes colorFade {
-    0% {
-        background-color: #ffffff00;
-        border-color: #ffffff00;
-    }
-
-    100% {
-        background-color: #99ff2d5d;
-        border-color: #99ff2d5d;
-    }
-
-}
-
-.cardShape.card.correctPlacement::after {
+.card-shape.card::after{
     content: "";
-    background-color: #99ff2d5d;
+    background-color: #99ff2d00;
     position: absolute;
     height: 100%;
     width: 100%;
@@ -220,12 +203,28 @@ button {
     right: 0;
     bottom: 0;
     border-radius: inherit;
-    
-    animation: colorFade 0.3s ease-in-out;
-    animation-iteration-count: 1;
+}
+
+.card-shape.card.correct-placement {
+    cursor: pointer;
+}
+
+@keyframes correct-animation {
+    0% {
+        background-color: #ffffff00;
+    }
+
+    100% {
+        background-color: #99ff2d5d;
+    }
+
+}
+
+.card-shape.card.correct-placement::after {
+    animation: correct-animation 0.3s ease-in-out 1 forwards;
 }
 
 
-.cardShape.card.incorrectPlacement {
+.card-shape.card.incorrect-placement::after {
     background-color: #ff2d2d;
 }

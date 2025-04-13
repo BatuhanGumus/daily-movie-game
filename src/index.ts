@@ -57,7 +57,7 @@ function InitPlacementBoard()
   for(let i = 0; i < flimCount; i++)
   {
     const cardPlacement = document.createElement("div")
-    cardPlacement.classList.add('cardShape', 'cardPlacement', 'three-dimensional', 'hole');
+    cardPlacement.classList.add('card-shape', 'card-placement', 'three-dimensional', 'hole');
     placementParent.appendChild(cardPlacement);
 
     const placemnt = new Placement(cardPlacement);
@@ -87,7 +87,7 @@ function InitSpawnBoard()
   for(let i = 0; i < flimCount; i++)
   {
     const cardSpawn = document.createElement("div")
-    cardSpawn.classList.add('cardShape', 'cardSpawn');
+    cardSpawn.classList.add('card-shape', 'card-spawn');
     cardSpawnBoard.appendChild(cardSpawn);
     cardSpawns.push(cardSpawn);
   }
@@ -115,7 +115,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardText.setAttribute('draggable', "false");
   cardDiv.appendChild(cardimg);
   cardDiv.appendChild(cardText);
-  cardDiv.classList.add('cardShape', 'card', 'three-dimensional', "thickness");
+  cardDiv.classList.add('card-shape', 'card', 'three-dimensional', "thickness");
   cardDiv.dataset.thickness = "3";
 
   cardDiv.addEventListener("pointerdown", (e: MouseEvent) => 
@@ -246,7 +246,7 @@ function checkCards()
         let correctCard = placements[i].card;
         if(correctCard != null)
         {
-          correctCard.element.classList.add("correctPlacement");
+          correctCard.element.classList.add("correct-placement");
           correctCard.correctlyPlaced = true;
         }
       }

@@ -38,7 +38,7 @@ function InitPlacementBoard() {
     lowestRatedText.innerText = "Lowest\nRated";
     for (let i = 0; i < flimCount; i++) {
         const cardPlacement = document.createElement("div");
-        cardPlacement.classList.add('cardShape', 'cardPlacement', 'three-dimensional', 'hole');
+        cardPlacement.classList.add('card-shape', 'card-placement', 'three-dimensional', 'hole');
         placementParent.appendChild(cardPlacement);
         const placemnt = new Placement(cardPlacement);
         placements.push(placemnt);
@@ -59,7 +59,7 @@ function InitSpawnBoard() {
     let cardSpawns = [];
     for (let i = 0; i < flimCount; i++) {
         const cardSpawn = document.createElement("div");
-        cardSpawn.classList.add('cardShape', 'cardSpawn');
+        cardSpawn.classList.add('card-shape', 'card-spawn');
         cardSpawnBoard.appendChild(cardSpawn);
         cardSpawns.push(cardSpawn);
     }
@@ -82,7 +82,7 @@ function InitCard(cardDiv, card, filmInfo) {
     cardText.setAttribute('draggable', "false");
     cardDiv.appendChild(cardimg);
     cardDiv.appendChild(cardText);
-    cardDiv.classList.add('cardShape', 'card', 'three-dimensional', "thickness");
+    cardDiv.classList.add('card-shape', 'card', 'three-dimensional', "thickness");
     cardDiv.dataset.thickness = "3";
     cardDiv.addEventListener("pointerdown", (e) => {
         if (card.correctlyPlaced)
@@ -180,7 +180,7 @@ function checkCards() {
             if (((_a = placements[i].card) === null || _a === void 0 ? void 0 : _a.id) == a) {
                 let correctCard = placements[i].card;
                 if (correctCard != null) {
-                    correctCard.element.classList.add("correctPlacement");
+                    correctCard.element.classList.add("correct-placement");
                     correctCard.correctlyPlaced = true;
                 }
             }
