@@ -252,6 +252,8 @@ function checkCards()
       else
         allCorrect = false;
     }
+    else
+      allCorrect = false;
     i++;
   }
 
