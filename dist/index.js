@@ -83,6 +83,7 @@ function InitCard(cardDiv, card, filmInfo) {
     cardDiv.appendChild(cardimg);
     cardDiv.appendChild(cardText);
     cardDiv.classList.add('cardShape', 'card', "thickness");
+    cardDiv.dataset.thickness = "3";
     cardDiv.addEventListener("pointerdown", (e) => {
         if (card.correctlyPlaced)
             return;
@@ -116,8 +117,9 @@ function InitCard(cardDiv, card, filmInfo) {
                         card.placedOn.card = null;
                     card.placedOn = placement;
                     placement.card = card;
+                    isPlaced = true;
                 }
-                else {
+                else if (placement.card.correctlyPlaced == false) {
                     if (card.placedOn != null) {
                         let placedCard = placement.card;
                         placedCard.placedOn = card.placedOn;
@@ -136,8 +138,8 @@ function InitCard(cardDiv, card, filmInfo) {
                         card.placedOn = placement;
                         placement.card = card;
                     }
+                    isPlaced = true;
                 }
-                isPlaced = true;
                 break;
             }
         }
@@ -199,7 +201,7 @@ function checkCards() {
     }
     attemptCount++;
     if (attemptCounterText != null)
-        attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "💔".repeat(attemptCount);
+        attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "🖤".repeat(attemptCount);
     if (attemptCount >= maxAttempts) {
         showToast("Maximum attempts reached!, You LOSE!");
         return;

@@ -53,7 +53,6 @@ main {
     background-color: #4b4b4b;
 
     border-radius: 1.5vw;
-    border: 0.2vw solid #4b4b4b;
 
     text-align: center;
     padding: 1.2vw;
@@ -90,6 +89,7 @@ main {
 .board#card-spawn-board
 {
     margin-top: 1.5vw;
+    padding-bottom: 0.8vw;
 }
 
 .board#check-board
@@ -136,6 +136,7 @@ main {
 
 .cardShape
 {
+    box-sizing: border-box;
     width: 8vw;
     height: 12vw;
     border-radius: 1vw;
@@ -146,7 +147,7 @@ main {
     background-color: #d3d3d364;
     text-align: center;
     border: 0.2vw solid;
-    border-color: #69696981;
+    border-color: #5e5e5e81;
     margin: 0.4vw;
 }
 
@@ -164,8 +165,9 @@ main {
 .cardShape.card {
     background-color: #ffd697;
     text-align: center;
-    border: 0.2vw solid #ffd697;
     padding-top: 0.4vw;
+    padding-right: 0.2vw;
+    padding-left: 0.2vw;
 
     user-select: none;
     cursor: grab;
@@ -215,15 +217,14 @@ main {
 {
     content: "";
     background-color: #99ff2d5d;
-    border: 0.2vw solid #99ff2d5d;
     animation: colorFade 0.3s ease-in-out;
     animation-iteration-count: 1;
     border-radius: inherit;
     height: 100%;
     width: 100%;
     position: absolute;
-    top: -0.15vw;
-    left: -0.15vw;
+    top: 0;
+    left: 0;
     right: 0;
     bottom: 0;
 }
@@ -236,21 +237,66 @@ main {
 
 .thickness
 {
+    --depth: 0.8vw;
+    --layer: 0rem;
+
     transform-style: preserve-3d;
-    transform: translate(0rem, -0.8vw);
+    transform: translate3d(0rem, calc(var(--depth) * -1), var(--layer));
 }
+
 .thickness::before 
 {
     position: absolute;
     content: "";
-    width: calc(100% + 0.38vw);
+    width: 100%;
     height: 100%;
     top: 0;
-    left: -0.18vw;
+    left: 0;
     right: 0;
     bottom: 0;
     background: inherit;
     filter: brightness(65%);
     border-radius: inherit;
-    transform: translate3d(0, 0.8vw, -1rem);
+    transform: translate3d(0, var(--depth), calc(var(--layer) - 1rem));
+}
+
+button.thickness:hover
+{
+
+    transform: translate3d(0, calc(var(--depth) * -0.8), var(--layer));
+}
+
+button.thickness:hover::before
+{
+    transform: translate3d(0, calc(var(--depth) * 0.8), calc(var(--layer) - 1rem));
+}
+
+button.thickness:active, 
+button.thickness.active
+{
+    transform: translate3d(0rem, 0, var(--layer));
+}
+
+button.thickness:active::before, 
+button.thickness.active::before
+{
+    transform: translate3d(0, 0, calc(var(--layer) - 1rem));
+}
+
+.thickness[data-thickness="1"] {
+    --depth: 0.5vw;
+}
+.thickness[data-thickness="2"] {
+    --depth: 0.7vw;
+}
+.thickness[data-thickness="3"] {
+    --depth: 0.9vw;
+}
+
+.thickness[data-layer="0"] {
+    --layer: 0;
+}
+
+.thickness[data-layer="1"] {
+    --layer: 0.5rem;
 }

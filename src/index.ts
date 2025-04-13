@@ -116,6 +116,7 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
   cardDiv.appendChild(cardimg);
   cardDiv.appendChild(cardText);
   cardDiv.classList.add('cardShape', 'card', "thickness");
+  cardDiv.dataset.thickness = "3";
 
   cardDiv.addEventListener("pointerdown", (e: MouseEvent) => 
   {
@@ -161,8 +162,9 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
           if(card.placedOn != null) card.placedOn.card = null;
           card.placedOn = placement;
           placement.card = card;
+          isPlaced = true;
         }
-        else
+        else if(placement.card.correctlyPlaced == false)
         {
           if(card.placedOn != null) 
           {
@@ -187,10 +189,9 @@ function  InitCard(cardDiv :HTMLElement, card :Card, filmInfo :any) : HTMLElemen
             card.placedOn = placement;
             placement.card = card;
           }
-          
+          isPlaced = true;
         }
 
-        isPlaced = true;
         break;
       }
     }
@@ -271,7 +272,7 @@ function checkCards()
 
   attemptCount++;
   if(attemptCounterText != null) 
-    attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "💔".repeat(attemptCount);
+    attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "🖤".repeat(attemptCount);
 
   if(attemptCount >= maxAttempts)
   {
