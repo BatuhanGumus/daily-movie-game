@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { collections } from './database.js';
 import { rectDistance, setPosition, showToast, vw, wait } from './util.js';
 import { Card, Placement } from './definitions.js';
+let allTopicButtons = new Map();
 let todaysSet;
 let setSize = 0;
 let cards = [];
@@ -22,17 +23,43 @@ let maxAttempts = 3;
 let attemptCounterText = null;
 let checkButton = null;
 let checkingAnswers = false;
+let sortTopic = "";
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
 function initGame() {
+    initTopics();
     initAnswer();
     InitPlayArea();
 }
+function initTopics() {
+    const topicMenu = document.getElementById('sort-topic-menu');
+    let hasSetSelectedTopic = false;
+    for (let collectionKey in collections) {
+        const button = document.createElement('button');
+        if (hasSetSelectedTopic == false) {
+            button.classList.add('selected');
+            hasSetSelectedTopic = true;
+        }
+        button.textContent = collections[collectionKey].topic;
+        button.addEventListener("click", () => setTopic(collectionKey));
+        topicMenu.appendChild(button);
+        allTopicButtons.set(collectionKey, button);
+    }
+}
+function setTopic(topic) {
+    var _a;
+    for (let button of allTopicButtons.values()) {
+        button.classList.remove('selected');
+    }
+    (_a = allTopicButtons.get(topic)) === null || _a === void 0 ? void 0 : _a.classList.add('selected');
+}
 function initAnswer() {
-    const topicCollection = collections.filmsByRating;
-    const random = Math.floor(Math.random() * topicCollection.length);
-    todaysSet = topicCollection[random];
+    const topicCollection = collections.countryByPopulation;
+    const collection = topicCollection.collection;
+    const random = Math.floor(Math.random() * collection.length);
+    todaysSet = collection[random];
     setSize = todaysSet.length;
+    sortTopic = topicCollection.comparisonType;
     let i = 0;
     let pullData = new Map();
     for (let setItem of todaysSet) {
@@ -48,8 +75,8 @@ function InitPlayArea() {
 }
 function InitPlacementBoard() {
     const placementParent = document.getElementById("placement-parent");
-    document.getElementById("lowest-text").innerText = "Lowest\nRated";
-    document.getElementById("highest-text").innerText = "Highest\nRated";
+    document.getElementById("lowest-text").innerText = `Lowest\n${sortTopic}`;
+    document.getElementById("highest-text").innerText = `Highest\n${sortTopic}`;
     for (let i = 0; i < setSize; i++) {
         const cardPlacement = document.createElement("div");
         cardPlacement.classList.add('card-shape', 'card-placement', 'three-dimensional', 'hole');

@@ -219,3 +219,39 @@ button {
 .card-shape.card.correct-placement {
     cursor: pointer;
 }
+
+.board#sort-topic-menu
+{
+    position: fixed;
+    top: 3vh;
+    right: 2vw;
+    padding: 0.8vw;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.6vw;
+
+    button {
+        background: rgba(255, 255, 255, 0);
+        color: #a0a0a0;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-size: 1vw;
+        transition: background 0.2s;
+    }
+
+    button.selected
+    {
+        color: #ffffff;
+    }
+        
+    button:hover {
+        color: #c7c7c7;
+    }
+
+    button.selected:hover
+    {
+        color: #ffffff;
+    }
+}
