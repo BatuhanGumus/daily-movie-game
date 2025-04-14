@@ -14,6 +14,7 @@ let allPlacements = [] as Placement[];
 let answer = new Map<number, number>();
 let attemptCount = 0;
 let maxAttempts = 3;
+
 let attemptCounterText = null as HTMLElement | null;
 let checkButton = null as HTMLElement | null;
 let checkingAnswers = false;
@@ -22,9 +23,25 @@ let sortTopic = "";
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
 
+function clearPlayArea()
+{
+  for (let card of cards) {
+    card.element.remove();
+  }
+  cards = [];
+  for (let placement of allPlacements) {
+    placement.element.remove();
+  }
+  allPlacements = [];
+  answerPlacements = [];
+  spawnPlacement = [];
+
+  attemptCount = 0;
+}
+
 function initGame() {
   initTopics();
-  initAnswer();
+  initAnswer("filmsByRating");
   InitPlayArea();
 }
 
@@ -55,8 +72,8 @@ function setTopic(topic :string)
   allTopicButtons.get(topic)?.classList.add('selected');
 }
 
-function initAnswer() {
-  const topicCollection = collections.countryByPopulation;
+function initAnswer(fromTopic :string) {
+  const topicCollection = collections[fromTopic as keyof typeof collections];
   const collection = topicCollection.collection;
   const random = Math.floor(Math.random() * collection.length);
   todaysSet = collection[random];
