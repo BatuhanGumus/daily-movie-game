@@ -27,13 +27,14 @@ export function setPosition(element: HTMLElement, rect: DOMRect) {
 }
 
 export function AnimateToPosition(element: HTMLElement, rect: DOMRect) {
-  var elementRect = element.getBoundingClientRect();
+  var leftStart = element.style.left;
+  var topStart = element.style.top;
 
   const animation = element.animate(
     [
       {
-        top: `${elementRect.top}px`,
-        left: `${elementRect.left}px`
+        top: `${topStart}px`,
+        left: `${leftStart}px`
       },
       {
         top: `${rect.top}px`,
@@ -41,9 +42,9 @@ export function AnimateToPosition(element: HTMLElement, rect: DOMRect) {
       }
     ],
     {
-      duration: 100,
-      fill: 'forwards',
-      easing: 'ease-in-out',
+      duration: rectDistance(element.getBoundingClientRect(), rect) * 0.6,
+      fill: 'none',
+      easing: 'ease-out',
     }
   );
 

@@ -21,20 +21,21 @@ export function setPosition(element, rect) {
     element.style.left = rect.left + "px";
 }
 export function AnimateToPosition(element, rect) {
-    var elementRect = element.getBoundingClientRect();
+    var leftStart = element.style.left;
+    var topStart = element.style.top;
     const animation = element.animate([
         {
-            top: `${elementRect.top}px`,
-            left: `${elementRect.left}px`
+            top: `${topStart}px`,
+            left: `${leftStart}px`
         },
         {
             top: `${rect.top}px`,
             left: `${rect.left}px`
         }
     ], {
-        duration: 100,
-        fill: 'forwards',
-        easing: 'ease-in-out',
+        duration: rectDistance(element.getBoundingClientRect(), rect) * 0.6,
+        fill: 'none',
+        easing: 'ease-out',
     });
     animation.onfinish = () => {
         setPosition(element, rect);

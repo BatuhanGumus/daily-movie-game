@@ -48,7 +48,7 @@ export class Card extends GameObject
 
   MoveToPlaced()
   {
-    setPosition(this.element, this.placedOn.rect());
+    AnimateToPosition(this.element, this.placedOn.rect());
   }
 
   correct() : number

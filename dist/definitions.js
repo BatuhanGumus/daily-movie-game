@@ -1,4 +1,4 @@
-import { setPosition } from './util.js';
+import { AnimateToPosition } from './util.js';
 class GameObject {
     constructor(element) {
         this.element = element;
@@ -31,7 +31,7 @@ export class Card extends GameObject {
         this.element.dataset.thickness = "3";
     }
     MoveToPlaced() {
-        setPosition(this.element, this.placedOn.rect());
+        AnimateToPosition(this.element, this.placedOn.rect());
     }
     correct() {
         let duration = 600;
