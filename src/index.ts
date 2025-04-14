@@ -152,7 +152,21 @@ function InitCard(card: Card) {
     }
 
     if (!placed) {
-      card.MoveToPlaced();
+      if(answerPlacements.includes(card.placedOn)) 
+      {
+        let closest = getClosestEmptyPlacement(card, spawnPlacement);
+        if(closest !== null)
+        {
+          card.placedOn.cardOnIt = null;
+          card.placedOn = closest;
+          closest.cardOnIt = card;
+          card.MoveToPlaced();
+        }
+        else
+          card.MoveToPlaced();
+      }
+      else
+        card.MoveToPlaced();
     }
   });
 }
@@ -225,3 +239,19 @@ async function checkCards() {
   }
 }
 
+function getClosestEmptyPlacement(card: Card, placements: Placement[]): Placement | null {
+  let closest: Placement | null = null;
+  let minDistance = Infinity;
+
+  for (const placement of placements) {
+    if( placement.cardOnIt != null) continue;
+    let distance = rectDistance(card.rect(), placement.rect());
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = placement;
+    }
+  }
+
+  return closest;
+}

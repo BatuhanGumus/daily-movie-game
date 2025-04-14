@@ -135,7 +135,19 @@ function InitCard(card) {
             }
         }
         if (!placed) {
-            card.MoveToPlaced();
+            if (answerPlacements.includes(card.placedOn)) {
+                let closest = getClosestEmptyPlacement(card, spawnPlacement);
+                if (closest !== null) {
+                    card.placedOn.cardOnIt = null;
+                    card.placedOn = closest;
+                    closest.cardOnIt = card;
+                    card.MoveToPlaced();
+                }
+                else
+                    card.MoveToPlaced();
+            }
+            else
+                card.MoveToPlaced();
         }
     });
 }
@@ -194,4 +206,18 @@ function checkCards() {
             return;
         }
     });
+}
+function getClosestEmptyPlacement(card, placements) {
+    let closest = null;
+    let minDistance = Infinity;
+    for (const placement of placements) {
+        if (placement.cardOnIt != null)
+            continue;
+        let distance = rectDistance(card.rect(), placement.rect());
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = placement;
+        }
+    }
+    return closest;
 }
