@@ -17,6 +17,10 @@ export const vw = (percent: number): number => {
   return window.innerWidth * (percent / 100);
 };
 
+export function wait(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function setPosition(element: HTMLElement, rect: DOMRect) {
   element.style.top = rect.top + "px";
   element.style.left = rect.left + "px";

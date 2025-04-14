@@ -35,8 +35,7 @@
     transform: translate3d(0, var(--depth), calc(var(--layer) - 1rem));
 }
 
-button.three-dimensional.thickness:hover {
-
+button.three-dimensional.thickness:not(.disabled):hover {
     transform: translate3d(0, calc(var(--depth) * -0.8), var(--layer));
 }
 
@@ -44,8 +43,8 @@ button.three-dimensional.thickness:hover::before {
     transform: translate3d(0, calc(var(--depth) * 0.8), calc(var(--layer) - 1rem));
 }
 
-button.three-dimensional.thickness:active,
-button.three-dimensional.thickness.active {
+button.three-dimensional.thickness:active:not(.disabled),
+button.three-dimensional.thickness.active:not(.disabled) {
     transform: translate3d(0, 0, var(--layer));
 }
 

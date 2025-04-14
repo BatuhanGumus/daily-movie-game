@@ -13,6 +13,9 @@ function distance(x1, y1, x2, y2) {
 export const vw = (percent) => {
     return window.innerWidth * (percent / 100);
 };
+export function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 export function setPosition(element, rect) {
     element.style.top = rect.top + "px";
     element.style.left = rect.left + "px";

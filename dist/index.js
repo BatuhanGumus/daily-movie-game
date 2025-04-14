@@ -1,5 +1,14 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { collections } from './database.js';
-import { rectDistance, setPosition, showToast, vw } from './util.js';
+import { rectDistance, setPosition, showToast, vw, wait } from './util.js';
 import { Card, Placement } from './definitions.js';
 let todaysSet;
 let setSize = 0;
@@ -11,6 +20,8 @@ let answer = new Map();
 let attemptCount = 0;
 let maxAttempts = 3;
 let attemptCounterText = null;
+let checkButton = null;
+let checkingAnswers = false;
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
 function initGame() {
@@ -49,6 +60,7 @@ function InitPlacementBoard() {
     }
 }
 function InitCheckBoard() {
+    checkButton = document.getElementById("check-button");
     attemptCounterText = document.getElementById("attempt-counter");
     attemptCounterText.innerText = `❤️`.repeat(maxAttempts);
     document.getElementById("check-button").addEventListener("click", checkCards);
@@ -74,7 +86,7 @@ function InitSpawnBoard() {
 }
 function InitCard(card) {
     card.element.addEventListener("pointerdown", (e) => {
-        if (card.correctlyPlaced)
+        if (card.correctlyPlaced || checkingAnswers)
             return;
         card.isDragging = true;
         card.offsetX = e.clientX - card.element.offsetLeft;
@@ -131,45 +143,53 @@ function moveCardsToWindowResize() {
     }
 }
 function checkCards() {
-    var _a, _b;
-    if (attemptCount >= maxAttempts) {
-        alert("Maximum attempts reached!");
-        return;
-    }
-    let i = 0;
-    let allCorrect = true;
-    let anyCardPlaced = false;
-    for (let a of answer.keys()) {
-        if (answerPlacements[i].cardOnIt != null) {
-            if (!((_a = answerPlacements[i].cardOnIt) === null || _a === void 0 ? void 0 : _a.correctlyPlaced))
-                anyCardPlaced = true;
-            if (((_b = answerPlacements[i].cardOnIt) === null || _b === void 0 ? void 0 : _b.id) == a) {
-                let correctCard = answerPlacements[i].cardOnIt;
-                if (correctCard != null) {
-                    correctCard.element.classList.add("correct-placement");
-                    correctCard.correctlyPlaced = true;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (checkingAnswers)
+            return;
+        if (attemptCount >= maxAttempts) {
+            alert("Maximum attempts reached!");
+            return;
+        }
+        checkButton === null || checkButton === void 0 ? void 0 : checkButton.classList.add("disabled");
+        checkingAnswers = true;
+        let i = 0;
+        let allCorrect = true;
+        let anyCardPlaced = false;
+        for (let a of answer.keys()) {
+            let placement = answerPlacements[i];
+            if (placement.cardOnIt != null) {
+                if (placement.cardOnIt.correctlyPlaced == false) {
+                    if (placement.cardOnIt.id === a) {
+                        yield wait(placement.cardOnIt.correct() * 0.8);
+                    }
+                    else {
+                        allCorrect = false;
+                        yield wait(placement.cardOnIt.incorrect() * 0.8);
+                    }
+                    anyCardPlaced = true;
                 }
             }
-            else
+            else {
                 allCorrect = false;
+            }
+            i++;
         }
-        else
-            allCorrect = false;
-        i++;
-    }
-    if (!anyCardPlaced) {
-        showToast("No card on the board to check!");
-        return;
-    }
-    if (allCorrect) {
-        showToast("You WIN!");
-        return;
-    }
-    attemptCount++;
-    if (attemptCounterText != null)
-        attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "🖤".repeat(attemptCount);
-    if (attemptCount >= maxAttempts) {
-        showToast("Maximum attempts reached!, You LOSE!");
-        return;
-    }
+        checkButton === null || checkButton === void 0 ? void 0 : checkButton.classList.remove("disabled");
+        checkingAnswers = false;
+        if (!anyCardPlaced) {
+            showToast("No card on the board to check!");
+            return;
+        }
+        if (allCorrect) {
+            showToast("You WIN!");
+            return;
+        }
+        attemptCount++;
+        if (attemptCounterText != null)
+            attemptCounterText.innerText = `❤️`.repeat(maxAttempts - attemptCount) + "🖤".repeat(attemptCount);
+        if (attemptCount >= maxAttempts) {
+            showToast("Maximum attempts reached!, You LOSE!");
+            return;
+        }
+    });
 }

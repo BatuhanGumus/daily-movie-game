@@ -1,5 +1,5 @@
 import { collections } from './database.js';
-import { rectDistance, setPosition, AnimateToPosition, showToast, vw } from './util.js';
+import { rectDistance, setPosition, AnimateToPosition, showToast, vw, wait } from './util.js';
 import { Card, Placement } from './definitions.js';
 
 
@@ -14,6 +14,8 @@ let answer = new Map<number, number>();
 let attemptCount = 0;
 let maxAttempts = 3;
 let attemptCounterText = null as HTMLElement | null;
+let checkButton = null as HTMLElement | null;
+let checkingAnswers = false;
 
 document.addEventListener('DOMContentLoaded', initGame);
 window.addEventListener("resize", moveCardsToWindowResize);
@@ -64,6 +66,7 @@ function InitPlacementBoard() {
 }
 
 function InitCheckBoard() {
+  checkButton = document.getElementById("check-button") as HTMLElement;
   attemptCounterText = document.getElementById("attempt-counter") as HTMLElement;
   attemptCounterText.innerText = `❤️`.repeat(maxAttempts);
   (document.getElementById("check-button") as HTMLElement).addEventListener("click", checkCards);
@@ -94,7 +97,7 @@ function InitSpawnBoard() {
 
 function InitCard(card: Card) {
   card.element.addEventListener("pointerdown", (e: MouseEvent) => {
-    if (card.correctlyPlaced) return;
+    if (card.correctlyPlaced || checkingAnswers) return;
 
     card.isDragging = true;
     card.offsetX = e.clientX - card.element.offsetLeft;
@@ -119,26 +122,22 @@ function InitCard(card: Card) {
 
     const cardRect = card.rect();
 
-    for (let placement of allPlacements){
+    for (let placement of allPlacements) {
       const placementRect = placement.rect();
       const distance = rectDistance(cardRect, placementRect);
 
-      if (distance < vw(5))
-      {
-        if( placement.cardOnIt == null) {
+      if (distance < vw(5)) {
+        if (placement.cardOnIt == null) {
           card.placedOn.cardOnIt = null
           card.placedOn = placement;
           placement.cardOnIt = card;
           card.MoveToPlaced();
         }
-        else
-        {
-          if(placement.cardOnIt.correctlyPlaced)
-          {
+        else {
+          if (placement.cardOnIt.correctlyPlaced) {
             card.MoveToPlaced();
           }
-          else
-          {
+          else {
             placement.cardOnIt.placedOn = card.placedOn;
             card.placedOn.cardOnIt = placement.cardOnIt;
             placement.cardOnIt.MoveToPlaced();
@@ -148,8 +147,7 @@ function InitCard(card: Card) {
           }
         }
       }
-      else
-      {
+      else {
         card.MoveToPlaced();
       }
     }
@@ -158,37 +156,51 @@ function InitCard(card: Card) {
 
 function moveCardsToWindowResize() {
   for (let card of cards) {
-      setPosition(card.element, card.placedOn.rect());
+    setPosition(card.element, card.placedOn.rect());
   }
 }
 
-function checkCards() {
+
+
+async function checkCards() {
+  if (checkingAnswers) return;
+
   if (attemptCount >= maxAttempts) {
     alert("Maximum attempts reached!");
     return;
   }
 
+  checkButton?.classList.add("disabled");
+  checkingAnswers = true;
+
   let i = 0;
   let allCorrect = true;
   let anyCardPlaced = false;
+
   for (let a of answer.keys()) {
-    if (answerPlacements[i].cardOnIt != null) {
-      if(!answerPlacements[i].cardOnIt?.correctlyPlaced) 
-        anyCardPlaced = true;
-      if (answerPlacements[i].cardOnIt?.id == a) {
-        let correctCard = answerPlacements[i].cardOnIt;
-        if (correctCard != null) {
-          correctCard.element.classList.add("correct-placement");
-          correctCard.correctlyPlaced = true;
+    let placement = answerPlacements[i];
+
+    if (placement.cardOnIt != null) {
+      if (placement.cardOnIt.correctlyPlaced == false) {
+        if (placement.cardOnIt.id === a) {
+          await wait(placement.cardOnIt.correct() * 0.8);
         }
+        else {
+          allCorrect = false;
+          await wait(placement.cardOnIt.incorrect() * 0.8);
+        }
+        anyCardPlaced = true;
       }
-      else
-        allCorrect = false;
     }
-    else
+    else {
       allCorrect = false;
+    }
+
     i++;
   }
+
+  checkButton?.classList.remove("disabled");
+  checkingAnswers = false;
 
   if (!anyCardPlaced) {
     showToast("No card on the board to check!");
