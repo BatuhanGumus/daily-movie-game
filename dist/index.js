@@ -107,6 +107,7 @@ function InitCard(card) {
         card.element.style.cursor = "grab";
         card.element.style.zIndex = "1";
         const cardRect = card.rect();
+        let placed = false;
         for (let placement of allPlacements) {
             const placementRect = placement.rect();
             const distance = rectDistance(cardRect, placementRect);
@@ -130,10 +131,11 @@ function InitCard(card) {
                         card.MoveToPlaced();
                     }
                 }
+                placed = true;
             }
-            else {
-                card.MoveToPlaced();
-            }
+        }
+        if (!placed) {
+            card.MoveToPlaced();
         }
     });
 }

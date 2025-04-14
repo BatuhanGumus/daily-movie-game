@@ -121,6 +121,7 @@ function InitCard(card: Card) {
     card.element.style.zIndex = "1";
 
     const cardRect = card.rect();
+    let placed = false;
 
     for (let placement of allPlacements) {
       const placementRect = placement.rect();
@@ -146,10 +147,12 @@ function InitCard(card: Card) {
             card.MoveToPlaced();
           }
         }
+        placed = true;
       }
-      else {
-        card.MoveToPlaced();
-      }
+    }
+
+    if (!placed) {
+      card.MoveToPlaced();
     }
   });
 }
